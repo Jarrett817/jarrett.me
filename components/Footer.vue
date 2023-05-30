@@ -1,7 +1,9 @@
 <template>
-  <div text="xl gray4" m-5 flex="~ gap3" justify-center>
-    <NuxtLink i-carbon-campsite to="/" />
-    <a i-carbon-logo-github href="https://github.com/antfu/vitesse-nuxt3" target="_blank" />
-    <DarkToggle />
+  <div class="slide-enter m-auto mb-6 mt-10 flex animate-delay-800 prose">
+    <p class="w-full text-center text-sm op50">
+      Released under the MIT License.
+      <br>
+      MIT Licensed | Copyright © 2021-present Jarrett Wang
+    </p>
   </div>
 </template>

@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@antfu/eslint-config': ^0.39.0
   '@iconify-json/carbon': ^1.1.16
+  '@iconify-json/tabler': ^1.1.77
   '@iconify-json/twemoji': ^1.1.11
   '@nuxt/devtools': ^0.5.0
   '@nuxtjs/color-mode': ^3.2.0
@@ -21,6 +22,7 @@ specifiers:
 devDependencies:
   '@antfu/eslint-config': registry.npmmirror.com/@antfu/eslint-config/0.39.3_opaykosi7ysrbskpnffskmbrki
   '@iconify-json/carbon': registry.npmmirror.com/@iconify-json/carbon/1.1.16
+  '@iconify-json/tabler': registry.npmmirror.com/@iconify-json/tabler/1.1.77
   '@iconify-json/twemoji': registry.npmmirror.com/@iconify-json/twemoji/1.1.11
   '@nuxt/devtools': registry.npmmirror.com/@nuxt/devtools/0.5.5_nuxt@3.5.1
   '@nuxtjs/color-mode': registry.npmmirror.com/@nuxtjs/color-mode/3.2.0
@@ -2113,6 +2115,14 @@ packages:
     resolution: {integrity: sha512-AD8bcnRSGA0WfcGEass2FbA0sagrUzrpFx5WchuDy3uf7yKBWumdypdQK121DH321fQDl5+zZQ26T6gC9knwUQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@iconify-json/carbon/-/carbon-1.1.16.tgz}
     name: '@iconify-json/carbon'
     version: 1.1.16
+    dependencies:
+      '@iconify/types': registry.npmmirror.com/@iconify/types/2.0.0
+    dev: true
+
+  registry.npmmirror.com/@iconify-json/tabler/1.1.77:
+    resolution: {integrity: sha512-FC/X5ScOvx07bVqTj2pqMbQhdSv63ZWYk2wbYHzPrxOKjQPZCt9cqSc2wh+rex0GR3HsI/T10FNG/cHPhNZy5A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@iconify-json/tabler/-/tabler-1.1.77.tgz}
+    name: '@iconify-json/tabler'
+    version: 1.1.77
     dependencies:
       '@iconify/types': registry.npmmirror.com/@iconify/types/2.0.0
     dev: true

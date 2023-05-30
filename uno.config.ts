@@ -16,7 +16,7 @@ export default defineConfig({
   ],
   presets: [
     presetUno(),
-    presetAttributify(),
+    presetAttributify(), // 启用属性化样式
     presetIcons({
       scale: 1.2,
     }),
