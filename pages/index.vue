@@ -3,7 +3,7 @@ const online = useOnline()
 </script>
 
 <template>
-  <div>
+  <div class="h-full w-full">
     <Suspense>
       <ClientOnly>
         <Home v-if="online" />
