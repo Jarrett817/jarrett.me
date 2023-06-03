@@ -8,7 +8,23 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxtjs/color-mode',
     '@vite-pwa/nuxt',
+    '@nuxt/content',
   ],
+
+  content: {
+    highlight: {
+      // theme: 'one-dark-pro',
+      theme: {
+        // Default theme (same as single string)
+        default: 'material-lighter',
+        // Theme used if `html.dark`
+        dark: 'material-darker',
+        // Theme used if `html.sepia`
+        sepia: 'monokai',
+      },
+      preload: ['diff', 'json', 'js', 'ts', 'shell', 'html', 'md', 'yaml', 'javascript', 'typescript', 'css', 'html', 'vue', 'vue-html'],
+    },
+  },
 
   experimental: {
     // when using generate, payload js assets included in sw precache manifest
@@ -56,6 +72,8 @@ export default defineNuxtConfig({
   },
 
   pwa,
+
+  extends: process.env.DOCUS_THEME_PATH || '@nuxt-themes/docus',
 
   devtools: {
     enabled: true,

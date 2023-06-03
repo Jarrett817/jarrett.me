@@ -1,5 +1,5 @@
 <template>
-  <main class="h-screen w-screen flex flex-col">
+  <main class="h-screen w-screen">
     <Header />
     <slot />
     <Footer />
