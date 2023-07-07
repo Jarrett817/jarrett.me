@@ -1,7 +1,6 @@
 <template>
   <main class="h-screen w-screen">
-    <Header />
+    <Plum />
     <slot />
-    <Footer />
   </main>
 </template>

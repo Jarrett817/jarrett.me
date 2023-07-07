@@ -1,5 +1,8 @@
 <script setup lang="ts">
-const online = useOnline()
+import '@/style/color.css'
+
+const online = true
+//  useOnline()
 </script>
 
 <template>

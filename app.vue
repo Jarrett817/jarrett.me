@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { appName } from '~/constants'
 
+// import '@/style/color.css'
+
 useHead({
   title: appName,
 })

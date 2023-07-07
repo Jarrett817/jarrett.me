@@ -12,7 +12,7 @@ const authorDetail = {
 </script>
 
 <template>
-  <div flex items-center justify-between px-8 py-4 border="b-1 slate-200" text="xl slate-700">
+  <div flex items-center justify-between px-8 py-4 text="xl slate-700">
     <div flex items-center>
       <NuxtLink i-carbon-campsite m-r-2 to="/" />
       <h1 select-none font-serif italic>
