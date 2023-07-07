@@ -1,6 +1,5 @@
 <script lang='ts' setup>
 import { Tree } from '@/utils/love'
-import { sleep } from '@/utils/sleep'
 
 onMounted(() => {
   const canvas: HTMLCanvasElement = document.querySelector('#canvas')!
@@ -8,11 +7,6 @@ onMounted(() => {
   const width = 500 // 500
   const height = 680 // 680
   const opts = {
-    seed: {
-      x: 0,
-      color: getCssVar('--blue-beach-glass'),
-      scale: 2,
-    },
     branch: [
       [
         0, 0, -20, height / 2, -40, height * 3 / 5, 30, 100,
@@ -52,41 +46,7 @@ onMounted(() => {
 
   const tree = new Tree(canvas, width, height, opts)
 
-  async function growAnimate() {
-    do {
-      tree.grow()
-      await sleep(10)
-    } while (tree.canGrow())
-  }
-
-  async function flowAnimate() {
-    do {
-      tree.flower(2)
-      await sleep(10)
-    } while (tree.canFlower())
-  }
-
-  function keepAlive() {
-    if (canvas.parentElement)
-      canvas.parentElement.style.backgroundImage = `url(${tree.toDataURL('image/png')})`
-  }
-
-  async function jumpAnimate() {
-    setInterval(() => {
-      tree.ctx.clearRect(-width / 2, 0, width, height)
-      tree.jump()
-    }, 35)
-  }
-
-  async function runAsync() {
-    await growAnimate()
-    await flowAnimate()
-    keepAlive()
-
-    await jumpAnimate()
-  }
-
-  runAsync()
+  tree.start()
 })
 </script>
 

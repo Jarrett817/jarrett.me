@@ -90,124 +90,6 @@ class Heart {
   }
 }
 
-class Seed {
-  tree: Tree
-  heart: {
-    point: Point
-    scale: number
-    color: string
-    figure: Heart
-  }
-
-  circle: {
-    point: Point
-    scale: number
-    color: string
-    radius: number
-  }
-
-  constructor(tree: Tree, point: Point, scale: number, color: string) {
-    this.tree = tree
-
-    scale = scale || 1
-    color = color || '#FF0000'
-
-    this.heart = {
-      point,
-      scale,
-      color,
-      figure: new Heart(),
-    }
-
-    this.circle = {
-      point,
-      scale,
-      color,
-      radius: 5,
-    }
-  }
-
-  draw(): void {
-    this.drawHeart()
-  }
-
-  addPosition(x: number, y: number): void {
-    this.circle.point = this.circle.point.add(new Point(x, y))
-  }
-
-  canMove(): boolean {
-    return this.circle.point.y < this.tree.height + 20
-  }
-
-  move(x: number, y: number): void {
-    this.clear()
-    this.drawCircle()
-    this.addPosition(x, y)
-  }
-
-  canScale(): boolean {
-    return this.heart.scale > 0.2
-  }
-
-  setHeartScale(scale: number): void {
-    this.heart.scale *= scale
-  }
-
-  scale(scale: number): void {
-    this.clear()
-    this.drawCircle()
-    this.drawHeart()
-    this.setHeartScale(scale)
-  }
-
-  drawHeart(): void {
-    const ctx = this.tree.ctx
-    const { point, scale, color, figure } = this.heart
-    ctx.save()
-    ctx.fillStyle = color
-    ctx.translate(point.x, point.y)
-    ctx.beginPath()
-    ctx.moveTo(0, 0)
-    for (let i = 0; i < figure.length; i++) {
-      const p = figure.get(i, scale)
-      ctx.lineTo(p.x, -p.y)
-    }
-    ctx.closePath()
-    ctx.fill()
-    ctx.restore()
-  }
-
-  clear(): void {
-    const ctx = this.tree.ctx
-    const { point, scale } = this.circle
-    const radius = 26
-    const w = (radius * scale)
-    const h = (radius * scale)
-    ctx.clearRect(point.x - w, point.y - h, 4 * w, 4 * h)
-  }
-
-  hover(x: number, y: number): boolean {
-    const ctx = this.tree.ctx
-    const pixel = ctx.getImageData(x, y, 1, 1)
-    return pixel.data[3] === 255
-  }
-
-  drawCircle(): void {
-    const ctx = this.tree.ctx
-    const { point, scale, color, radius } = this.circle
-    ctx.save()
-    ctx.fillStyle = color
-    ctx.translate(point.x, point.y)
-    ctx.scale(scale, scale)
-    ctx.beginPath()
-    ctx.moveTo(0, 0)
-    ctx.arc(0, 0, radius, 0, Math.PI * 2)
-    ctx.closePath()
-    ctx.fill()
-    ctx.restore()
-  }
-}
-
 type Branches = [number, number, number, number, number, number, number, number, Branches[]]
 
 class Tree {
@@ -222,18 +104,11 @@ class Tree {
     }
   } = {}
 
-  seed: Seed
   branches: Branch[] = []
   blooms: Bloom[] = []
   bloomsCache: Bloom[] = []
 
   constructor(public canvas: HTMLCanvasElement, public width: number, public height: number, public opt: {
-    seed: {
-      x: number
-      y?: number
-      color: string
-      scale: number
-    }
     bloom: {
       num: number
       width: number
@@ -249,16 +124,8 @@ class Tree {
     this.ctx.scale(1, -1) // 原点居中，x轴贴底
     this.opt = opt || {}
 
-    this.seed = this.initSeed()
     this.initBranch()
     this.initBloom()
-  }
-
-  initSeed() {
-    const { x = this.width / 2, y = this.height / 2, color = '#FF0000', scale = 1 } = this.opt.seed || {}
-    const point = new Point(x, y)
-
-    return new Seed(this, point, scale, color)
   }
 
   initBranch() {
@@ -272,10 +139,9 @@ class Tree {
     const num = bloom.num || 500
     const width = bloom.width || this.width
     const height = bloom.height || this.height
-    const figure = this.seed.heart.figure
     const r = 200
     for (let i = 0; i < num; i++)
-      cache.push(this.createBloom(width, height, r, figure))
+      cache.push(this.createBloom(width, height, r))
 
     this.bloomsCache = cache
   }
@@ -349,13 +215,13 @@ class Tree {
     }
   }
 
-  createBloom(width: number, height: number, radius: number, figure: Heart, color?: string, alpha?: number, angle?: number, scale?: number, place?: Point, speed?: number) {
+  createBloom(width: number, height: number, radius: number, color?: string, alpha?: number, angle?: number, scale?: number, place?: Point, speed?: number) {
     let x, y
     while (true) {
       x = random(-width / 2 + 5, width / 2 - 5)
       y = random(20, height - 50)
       if (inHeart(x, y - ((height - 50) / 2), radius))
-        return new Bloom(this, new Point(x, y), figure, color, alpha, angle, scale, place, speed)
+        return new Bloom(this, new Point(x, y), color, alpha, angle, scale, place, speed)
     }
   }
 
@@ -367,7 +233,6 @@ class Tree {
     let blooms = this.bloomsCache.splice(0, num)
     for (let i = 0; i < blooms.length; i++)
       this.addBloom(blooms[i])
-
     blooms = this.blooms
     for (let j = 0; j < blooms.length; j++)
       blooms[j].flower()
@@ -422,11 +287,44 @@ class Tree {
     }
     if ((blooms.length && blooms.length < 3) || !blooms.length) {
       const { width = this.width, height = this.height } = this.opt.bloom || {}
-      const figure = this.seed.heart.figure
       const r = 240
       for (let i = 0; i < random(1, 2); i++)
-        blooms.push(this.createBloom(width / 2 + width, height, r, figure, '', 1, 0, 1, new Point(random(-this.width / 2, this.width / 2), -30), random(200, 300)))
+        blooms.push(this.createBloom(width / 2 + width, height, r, '', 1, 0, 1, new Point(random(-this.width / 2, this.width / 2), -30), random(200, 300)))
     }
+  }
+
+  async start() {
+    const growAnimate = async () => {
+      do {
+        this.grow()
+        await sleep(10)
+      } while (this.canGrow())
+    }
+
+    const flowAnimate = async () => {
+      do {
+        this.flower(2)
+        await sleep(10)
+      } while (this.canFlower())
+    }
+
+    const keepAlive = async () => {
+      if (this.canvas.parentElement)
+        this.canvas.parentElement.style.backgroundImage = `url(${this.toDataURL('image/png')})`
+    }
+
+    const jumpAnimate = async () => {
+      setInterval(() => {
+        this.ctx.clearRect(-this.width / 2, 0, this.width, this.height)
+        this.jump()
+      }, 35)
+    }
+
+    await growAnimate()
+    await flowAnimate()
+    keepAlive()
+
+    await jumpAnimate()
   }
 }
 
@@ -475,7 +373,12 @@ class Branch {
 }
 
 class Bloom {
-  constructor(public tree: Tree, public point: Point, public figure: Heart, public color?: string, public alpha?: number, public angle?: number, public scale?: number, public place?: Point, public speed?: number) {
+  color: string
+  alpha: number
+  scale: number
+  angle: number
+
+  constructor(public tree: Tree, public point: Point, color?: string, alpha?: number, angle?: number, scale?: number, public place?: Point, public speed?: number) {
     this.tree = tree
     this.point = point
     this.color = color || randomColor()
@@ -484,32 +387,27 @@ class Bloom {
     this.scale = scale || 0.1
     this.place = place
     this.speed = speed
-    this.figure = figure
-  }
-
-  setFigure(figure: Heart) {
-    this.figure = figure
   }
 
   flower() {
     this.draw()
-    this.scale! += 0.1
-    if (this.scale! > 1)
+    this.scale += 0.1
+    if (this.scale > 1)
       this.tree.removeBloom(this)
   }
 
   draw() {
     const ctx = this.tree.ctx
-    const figure = this.figure
 
     ctx.save()
-    ctx.fillStyle = this.color!
-    ctx.globalAlpha = this.alpha!
+    ctx.fillStyle = this.color
+    ctx.globalAlpha = this.alpha
     ctx.translate(this.point.x, this.point.y)
-    ctx.scale(this.scale!, this.scale!)
-    ctx.rotate(this.angle!)
+    ctx.scale(this.scale, this.scale)
+    ctx.rotate(this.angle)
     ctx.beginPath()
     ctx.moveTo(0, 0)
+    const figure = new Heart()
     for (let i = 0; i < figure.length; i++) {
       const p = figure.get(i)
       ctx.lineTo(p.x, -p.y)
@@ -534,44 +432,4 @@ class Bloom {
   }
 }
 
-class Footer {
-  tree: Tree
-  width: number
-  height: number
-  speed: number
-  point: Point
-  length: number
-
-  constructor(tree: Tree, width: number, height: number, speed: number) {
-    this.tree = tree
-    this.point = new Point(tree.seed.heart.point.x, tree.height - height / 2)
-    this.width = width
-    this.height = height
-    this.speed = speed || 2
-    this.length = 0
-  }
-
-  draw(): void {
-    const ctx = this.tree.ctx
-    const point = this.point
-    const len = this.length / 2
-
-    ctx.save()
-    ctx.strokeStyle = 'rgb(35, 31, 32)'
-    ctx.lineWidth = this.height
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
-    ctx.translate(point.x, point.y)
-    ctx.beginPath()
-    ctx.moveTo(0, 0)
-    ctx.lineTo(len, 0)
-    ctx.lineTo(-len, 0)
-    ctx.stroke()
-    ctx.restore()
-
-    if (this.length < this.width)
-      this.length += this.speed
-  }
-}
-
-export { Tree, Point, Heart, Seed, Bloom, Footer }
+export { Tree, Point, Bloom }
