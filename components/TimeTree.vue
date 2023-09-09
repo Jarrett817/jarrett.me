@@ -51,7 +51,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="time-tree bg-cover">
+  <div class="time-tree bg-cover bg-contain bg-no-repeat">
     <canvas id="canvas" />
   </div>
 </template>
