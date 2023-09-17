@@ -48,20 +48,17 @@ const MainReveal = ref(null)
 </script>
 
 <template>
-  <article class="w-full flex-col">
-    <Header />
-
-    <section>
-      <section class="h-screen">
-        123
-      </section>
-      <section class="h-4/5 flex" data-aos="fade-up" data-aos-once="false">
-        <Cards class="flex-1" />
-      </section>
-      <section class="h-4/5" data-aos="fade-in" data-aos-once="false">
-        <TimeTree class="w-1/2" />
-      </section>
+  <section class="home">
+    <section class="h-screen">
+      <h1>
+        Jarrett's blog
+      </h1>
     </section>
-    <Footer />
-  </article>
+    <section class="h-4/5 flex" data-aos="fade-up" data-aos-once="false">
+      <Cards class="flex-1" />
+    </section>
+    <section class="h-4/5" data-aos="fade-in" data-aos-once="false">
+      <TimeTree class="w-1/2" />
+    </section>
+  </section>
 </template>

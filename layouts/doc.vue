@@ -1,7 +1,6 @@
 <template>
-  <main class="h-screen w-screen flex flex-col">
+  <main class="doc-layout h-screen w-screen flex">
     <Plum />
-    <Header />
     <div class="flex-1 overflow-auto">
       <slot />
     </div>

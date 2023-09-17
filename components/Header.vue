@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup lang="ts">
 const authorDetail = {
   name: 'Jarrett',
   socialLinks: [
@@ -12,14 +12,46 @@ const authorDetail = {
 </script>
 
 <template>
-  <div flex items-center justify-between px-8 py-4 text="xl slate-700">
+  <div
+    class="sider"
+    text="xl slate-700"
+    relative
+    h-full
+    flex
+    flex-col
+    items-center
+    justify-between
+    px-4
+    py-4
+  >
     <div flex items-center>
       <NuxtLink i-carbon-campsite m-r-2 to="/" />
       <h1 select-none font-serif italic>
         {{ authorDetail.name }}
       </h1>
     </div>
-    <DarkToggle m-r-2 text="gray-4" />
+    <ContentNavigation v-slot="{ navigation }">
+      <ul
+        absolute
+        flex
+        rotate-270
+        justify-between
+        class="menu-list left-50% top-50% -translate-1/2"
+      >
+        <li
+          v-for="link of navigation"
+          :key="link._path"
+          class="menu-list__item"
+          mr-4
+          whitespace-nowrap
+        >
+          <NuxtLink :to="link._path">
+            {{ link.title }}
+          </NuxtLink>
+        </li>
+      </ul>
+    </ContentNavigation>
+    <!-- <DarkToggle m-r-2 text="gray-4" /> -->
     <div flex="~ gap3" justify-center>
       <a
         v-for="(item, index) in authorDetail.socialLinks"
@@ -31,3 +63,23 @@ const authorDetail = {
     </div>
   </div>
 </template>
+
+<style lang="postcss" scoped>
+.sider {
+  background-color: var(--blue-atoll);
+  color: white;
+  font-size: 14px;
+}
+.menu-list {
+  &__item {
+    width: fit-content;
+    padding: 4px 8px;
+    border-radius: 14px 14px;
+
+    &.--active,
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+}
+</style>

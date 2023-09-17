@@ -1,18 +1,12 @@
 <script setup lang="ts">
 import '@/style/color.css'
-
-const online = true
-//  useOnline()
 </script>
 
 <template>
-  <div class="h-full w-full">
+  <div class="home-page h-full w-full">
     <Suspense>
       <ClientOnly>
-        <Welcome v-if="online" />
-        <div v-else text-gray:80>
-          You're offline
-        </div>
+        <Home />
       </ClientOnly>
       <template #fallback>
         <div italic op50>
