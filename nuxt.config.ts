@@ -9,8 +9,13 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@vite-pwa/nuxt',
     '@nuxt/content',
+    // '@nuxt/image',
     'nuxt-swiper',
   ],
+
+  image: {
+    dir: 'assets/images',
+  },
 
   content: {
     highlight: {

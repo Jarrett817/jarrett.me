@@ -1,5 +1,5 @@
 <template>
-  <div class="slide-enter m-auto mb-6 mt-10 flex animate-delay-800 prose">
+  <div class="slide-enter m-auto flex animate-delay-800 prose">
     <p class="w-full text-center text-sm op50">
       Released under the MIT License.
       <br>

@@ -13,12 +13,10 @@ const authorDetail = {
 
 <template>
   <div
-    class="sider"
+    class="header"
     text="xl slate-700"
-    relative
-    h-full
+    w-full
     flex
-    flex-col
     items-center
     justify-between
     px-4
@@ -32,11 +30,9 @@ const authorDetail = {
     </div>
     <ContentNavigation v-slot="{ navigation }">
       <ul
-        absolute
         flex
-        rotate-270
         justify-between
-        class="menu-list left-50% top-50% -translate-1/2"
+        class="menu-list"
       >
         <li
           v-for="link of navigation"
@@ -65,9 +61,9 @@ const authorDetail = {
 </template>
 
 <style lang="postcss" scoped>
-.sider {
-  background-color: var(--blue-atoll);
-  color: white;
+.header {
+  /* background-color: var(--blue-atoll); */
+  /* color: white; */
   font-size: 14px;
 }
 .menu-list {

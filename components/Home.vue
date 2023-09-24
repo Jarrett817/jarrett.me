@@ -2,6 +2,8 @@
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
+useDotMatrix('#dot-matrix')
+
 // import Markdown from 'reveal.js/plugin/markdown/markdown.esm.js'
 
 // import 'reveal.js/dist/reveal.css'
@@ -28,7 +30,6 @@ AOS.init({
 })
 
 // import 'reveal.js/dist/theme/serif.css'
-const MainReveal = ref(null)
 
 // onMounted(() => {
 //   const deck = new Reveal(MainReveal.value, {
@@ -48,17 +49,107 @@ const MainReveal = ref(null)
 </script>
 
 <template>
-  <section class="home">
-    <section class="h-screen">
-      <h1>
-        Jarrett's blog
+  <div class="home-page">
+    <div class="home-page__content">
+      <h1 class="home-page__title" font-serif>
+        Jarrett's
       </h1>
-    </section>
-    <section class="h-4/5 flex" data-aos="fade-up" data-aos-once="false">
+      <h1 class="home-page__title" font-serif>
+        Blog
+      </h1>
+      <!-- <NuxtImg src="/assets/images/building.jpeg" class="home-page__pic">
+        <div id="dot-matrix" class="home-page__pic-dot" />
+      </NuxtImg> -->
+      <div class="copyright flex prose">
+        <p class="w-full text-center text-sm op50">
+          Released under the MIT License.
+          <br>
+          MIT Licensed | Copyright © 2021-present Jarrett Wang
+        </p>
+      </div>
+
+      <!-- <section> -->
+      <!-- <section class="h-screen"> -->
+      <!-- </section> -->
+      <!-- <section class="h-4/5 flex" data-aos="fade-up" data-aos-once="false">
       <Cards class="flex-1" />
     </section>
     <section class="h-4/5" data-aos="fade-in" data-aos-once="false">
       <TimeTree class="w-1/2" />
-    </section>
-  </section>
+    </section> -->
+      <!-- </section> -->
+    </div>
+  </div>
 </template>
+
+<style lang="postcss" scoped>
+.home-page {
+  --bg-color: rgb(194, 225, 247);
+
+  height: 100%;
+  padding: 0 24px 24px 24px;
+
+  &__title {
+    font-size: 48px;
+    position: absolute;
+
+    &:first-child {
+      top: 50%;
+      left: 10%;
+      transform: translate(-30%, -120%);
+    }
+
+    &:last-of-type {
+      top: 50%;
+      left: calc(10% + 100px);
+      transform: translate(0, -50%);
+    }
+  }
+
+  &__content {
+    position: relative;
+    border-radius: 12px;
+    height: 100%;
+    width: 100%;
+    background: var(--bg-color);
+    background: linear-gradient(0deg, rgba(246, 247, 247, 1) 50%, var(--bg-color) 50%);
+
+    .copyright {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%);
+    }
+
+    &::before {
+      content: "";
+      width: 60vh;
+      height: 30vh;
+      display: block;
+      position: absolute;
+      top: 50%;
+      right: 10vw;
+      transform: translate(0, -100%);
+      box-shadow: -1px 3px 15px #b0b0b0;
+    }
+  }
+
+  &__pic {
+    width: 60vh;
+    height: 60vh;
+    position: absolute;
+    top: 50%;
+    right: 10vw;
+    transform: translate(0, -50%);
+    background-color: var(--bg-color);
+    z-index: 1;
+
+    &-dot {
+      position: absolute;
+      right: 0;
+      top: 0;
+      transform: translate(50%, -50%);
+    }
+  }
+}
+</style>

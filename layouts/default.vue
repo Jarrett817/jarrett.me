@@ -1,14 +1,9 @@
-<script setup lang="ts">
-useBackground()
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <article class="default-layout h-full w-full flex">
-    <Background />
-    <div class="default-layout__sider" fixed left-0 top-0 h-full>
-      <Header />
-    </div>
-    <main flex-1 class="default-layout__main">
+  <article class="default-layout flex flex-col">
+    <Header />
+    <main flex-1 overflow-hidden class="default-layout__main">
       <slot />
     </main>
   </article>
@@ -16,13 +11,7 @@ useBackground()
 
 <style lang="postcss" scoped>
 .default-layout {
-  --sider-width: 100px;
-
-  &__sider {
-    width: var(--sider-width);
-  }
-  &__main {
-    padding-left: var(--sider-width);
-  }
+  height: 100vh;
+  width: 100vw;
 }
 </style>

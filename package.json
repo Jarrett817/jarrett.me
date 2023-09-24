@@ -23,6 +23,7 @@
     "@nuxtjs/color-mode": "^3.2.0",
     "@pinia/nuxt": "^0.4.11",
     "@types/aos": "^3.0.4",
+    "@types/fabric": "^5.3.4",
     "@unocss/eslint-config": "^0.51.13",
     "@unocss/nuxt": "^0.51.13",
     "@vite-pwa/nuxt": "^0.0.9",
@@ -37,6 +38,8 @@
   },
   "dependencies": {
     "aos": "^2.3.4",
+    "fabric": "^5.3.0",
+    "mind-elixir": "^3.1.4",
     "pixi.js": "^7.2.4",
     "reveal.js": "^4.5.0"
   }
