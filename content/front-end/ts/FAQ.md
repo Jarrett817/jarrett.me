@@ -4,15 +4,15 @@
 
 ```ts
 // 解答
-type union = string | number;
+type union = string | number
 
 interface Obj {
-  [key: union]: union;
+  [key: union]: union
 }
 
 // 或者
 
-type Obj1 = Record<any, union>;
+type Obj1 = Record<any, union>
 ```
 
 - 已知 interface T1, T2, 求类型 T3, 要求 T3 拥有 T1 和 T2 的所有属性, 对应 value 的类型也和 T1,T2 一样
@@ -21,31 +21,31 @@ type Obj1 = Record<any, union>;
 // 解答
 
 interface T1 {
-  name: string;
+  name: string
 }
 
 interface T2 {
-  age: number;
+  age: number
 }
 
-type T3 = Omit<T1, keyof T2> & T2; // 如果直接使用交叉类型，会使同名属性为 nerver
+type T3 = Omit<T1, keyof T2> & T2 // 如果直接使用交叉类型，会使同名属性为 nerver
 ```
 
 1. 求 ItemWithoutType, 要求能正确反映函数 omitType 的返回类型（尽量使用 util type）
 
 ```ts
 interface Item {
-  type: string;
-  value: any;
+  type: string
+  value: any
 }
 
 // 解答
-type ItemWithoutType = Omit<Item, 'type'>;
+type ItemWithoutType = Omit<Item, 'type'>
 
 function omitType<T extends Item>(obj: T): ItemWithoutType {
-  const result = { ...obj };
-  delete result.type;
-  return result;
+  const result = { ...obj }
+  delete result.type
+  return result
 }
 ```
 
@@ -53,13 +53,13 @@ function omitType<T extends Item>(obj: T): ItemWithoutType {
 
 ```ts
 interface PlusObj {
-  [key: string]: any;
-  a: number;
-  b: number;
+  [key: string]: any
+  a: number
+  b: number
 }
 
 function getAPlusB(obj: PlusObj) {
-  return obj.a + obj.b;
+  return obj.a + obj.b
 }
 ```
 
@@ -67,35 +67,35 @@ function getAPlusB(obj: PlusObj) {
 
 ```ts
 interface IFoo {
-  a: string;
-  b: number;
+  a: string
+  b: number
   // ...
 }
 
 // 解答
 type IFooMapping<T> = {
   [K in keyof T]: () => T[K];
-};
+}
 ```
 
 1. 请写出 event 的类型
 
 ```ts
 // 答案
-type Foo = (event: MouseEvent) => void;
+type Foo = (event: MouseEvent) => void
 
-const foo: Foo = event => {
+const foo: Foo = (event) => {
   // ...
-};
+}
 
-window.addEventListener('click', foo);
+window.addEventListener('click', foo)
 ```
 
 2. 请实现这样的泛型: 当 T 的 type 属性类型为 string 时, 得到 `{ obj: T }` , 否则得到 `null`
 
 ```ts
 // 答案
-type IFoo<T> = T extends string ? { obj: T } : null;
+type IFoo<T> = T extends string ? { obj: T } : null
 ```
 
 ```ts
@@ -139,8 +139,8 @@ interface N4 extends String {} // ok
  *
  * @param {MouseEvent} event
  */
-const foo = event => {
+function foo(event) {
   // ...
-  console.log(event);
-};
+  console.log(event)
+}
 ```

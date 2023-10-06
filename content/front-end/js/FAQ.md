@@ -12,11 +12,11 @@
 - 如何让 (a == 1 && a == 2 && a == 3) 的值为 true?
 
 ```js
-let i = 1;
+let i = 1
 Number.prototype.valueOf = function () {
-  return i++;
-};
-const a = new Number(1);
+  return i++
+}
+const a = new Number(1)
 ```
 
 - 写出下面运行的结果,解释原因
@@ -81,31 +81,34 @@ function myTypeOf(params) {
 
 ```js
 function myTypeOf(params) {
-  const res = Object.prototype.toString.call(params);
-  return res.slice(1, -1).split(' ')[1].toLowerCase();
+  const res = Object.prototype.toString.call(params)
+  return res.slice(1, -1).split(' ')[1].toLowerCase()
 }
 function forEach(ary, fn) {
-  let index = 0;
-  const length = ary.length;
+  let index = 0
+  const length = ary.length
   while (index < length) {
-    fn(ary[index], index);
-    index++;
+    fn(ary[index], index)
+    index++
   }
 }
 
 function deepClone(target, map = new WeakMap()) {
   if (['object', 'array'].includes(myTypeOf(target))) {
-    const isObj = myTypeOf(target) === 'object';
-    let result = isObj ? {} : [];
-    if (map.get(target)) return map.get(target);
-    map.set(target, result);
-    const keys = isObj ? Object.keys(target) : target;
+    const isObj = myTypeOf(target) === 'object'
+    const result = isObj ? {} : []
+    if (map.get(target))
+      return map.get(target)
+    map.set(target, result)
+    const keys = isObj ? Object.keys(target) : target
     forEach(keys, (value, key) => {
-      if (isObj) key = value;
-      result[key] = deepClone(target[key], map);
-    });
-    return result;
-  } else return target;
+      if (isObj)
+        key = value
+      result[key] = deepClone(target[key], map)
+    })
+    return result
+  }
+  else { return target }
 }
 ```
 
@@ -114,19 +117,18 @@ function deepClone(target, map = new WeakMap()) {
 1. 下面代码的输出结果
 
 ```js
-var a = 20;
+const a = 20
 
 function foo() {
-  if (!a) {
-    a = 100;
-  }
+  if (!a)
+    a = 100
 
-  var a = 10;
+  var a = 10
 
-  return a;
+  return a
 }
 
-console.log(foo());
+console.log(foo())
 ```
 
 解：输出为 10，因为 js 采用词法作用域，函数内部的作用域在函数定义时就确定了，优先查找并使用函数内部新创建的 a 变量
@@ -135,17 +137,17 @@ console.log(foo());
 
 ```js
 function outer() {
-  var a = 1;
+  const a = 1
 
   function inner() {
-    var b = 2;
-    console.log(b);
+    const b = 2
+    console.log(b)
   }
 
-  return inner;
+  return inner
 }
 
-outer()();
+outer()()
 ```
 
 解：不存在，虽然 inner 函数在 outer 函数的作用域链里，但是没有引用外部变量，未形成闭包
@@ -174,16 +176,16 @@ outer()();
 
 ```js
 function outer() {
-  var a = 1;
+  const a = 1
 
   function inner() {
-    console.log(a);
+    console.log(a)
   }
 
-  inner();
+  inner()
 }
 
-outer();
+outer()
 ```
 
 解：存在，内部 inner 函数引用了其外部作用域链上的变量，形成闭包，但由于没有 return 出来，在执行完毕后，闭包会被回收
@@ -195,19 +197,19 @@ outer();
 ```js
 function New(func) {
   // 创建一个中间对象实例
-  const res = {};
+  const res = {}
   // 将实例的原型指向构造函数的原型
-  if (func.prototype !== null) {
-    res.__proto__ = func.prototype;
-  }
+  if (func.prototype !== null)
+    res.__proto__ = func.prototype
+
   // 将构造函数的this指向新创建的中间对象
-  const ret = func.apply(res, Array.prototype.slice.call(arguments, 1));
+  const ret = func.apply(res, Array.prototype.slice.call(arguments, 1))
 
   // 如果构造函数有明确指定返回对象，当返回结果类型是object或者function时，返回对象，否则返回指定的结果
-  if ((typeof ret === 'object' || typeof ret === 'function') && ret !== null) {
-    return ret;
-  }
-  return res;
+  if ((typeof ret === 'object' || typeof ret === 'function') && ret !== null)
+    return ret
+
+  return res
 }
 ```
 
@@ -215,11 +217,13 @@ function New(func) {
 
 ```js
 function myInstanceof(instance, target) {
-  const instanceProto = instance.__proto__,
-    targetProto = target.prototype;
-  if (!instanceProto) return false;
-  if (instanceProto === targetProto) return true;
-  else return myInstanceof(instanceProto, target);
+  const instanceProto = instance.__proto__
+  const targetProto = target.prototype
+  if (!instanceProto)
+    return false
+  if (instanceProto === targetProto)
+    return true
+  else return myInstanceof(instanceProto, target)
 }
 ```
 
@@ -485,14 +489,14 @@ function myInstanceof(instance, target) {
 function sleep(fn, time) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve(fn());
-    }, time);
-  });
+      resolve(fn())
+    }, time)
+  })
 }
 
 sleep(() => {
-  return '执行';
-}, 3000).then(res => console.log(res));
+  return '执行'
+}, 3000).then(res => console.log(res))
 ```
 
 2. 实现 Promise.retry
@@ -507,26 +511,25 @@ sleep(() => {
      return new Promise(async (resolve, reject) => {
        while (chance--) {
          try {
-           resolve(await fn());
+           resolve(await fn())
          } catch (err) {
-           !chance && reject(err);
+           !chance && reject(err)
          }
        }
-     });
+     })
    };
 
    function doSomething() {
      return new Promise((res, reje) => {
        setTimeout(() => {
-         reje(1);
-       }, 1000);
-     });
+         reje(1))
+       } 1000))
+     };
    }
 
    Promise.retry(doSomething, 3)
      .then(res => console.log('success,res'))
-     .catch(err => console.log('error', err));
-   ```
+     .catch(err => console.log('error', err));)```
 
 3. 手写 promise，使用[promises-aplus-tests](https://github.com/promises-aplus/promises-tests) 进行测试
 
@@ -567,39 +570,39 @@ sleep(() => {
 
 ```js
 class TrafficLight {
-  promisedLights = [];
-  stopSignal = false;
+  promisedLights = []
+  stopSignal = false
   constructor(lights) {
     this.promisedLights = lights.map(({ lighting, duration, color }) => {
       return () =>
         new Promise((resolve, reject) => {
-          console.log(`${color} start!`);
-          lighting();
+          console.log(`${color} start!`)
+          lighting()
           setTimeout(() => {
             if (!this.stopSignal) {
-              console.log(`${color} end!`);
-              resolve();
+              console.log(`${color} end!`)
+              resolve()
             }
-          }, duration);
-        });
-    });
+          }, duration)
+        })
+    })
   }
 
   async start() {
     while (this.promisedLights.length) {
       if (this.stopSignal) {
-        this.promisedLights = [];
-        break;
+        this.promisedLights = []
+        break
       }
-      const light = this.promisedLights.shift();
-      light && (await light());
-      this.promisedLights.push(light);
-      continue;
+      const light = this.promisedLights.shift()
+      light && (await light())
+      this.promisedLights.push(light)
+      continue
     }
   }
 
   stop() {
-    this.stopSignal = true;
+    this.stopSignal = true
   }
 }
 
@@ -607,13 +610,13 @@ const lights = [
   { duration: 5000, lighting: red, color: 'red' },
   { duration: 6000, lighting: green, color: 'green' },
   { duration: 1000, lighting: yellow, color: 'yellow' }
-];
+]
 
-const trafficLight = new TrafficLight(lights);
+const trafficLight = new TrafficLight(lights)
 
-trafficLight.start();
+trafficLight.start()
 
-setTimeout(() => trafficLight.stop(), 100000);
+setTimeout(() => trafficLight.stop(), 100000)
 ```
 
 2. 实现一个带并发限制的异步调度器 Scheduler，保证同时运行的任务最多有两个
@@ -629,12 +632,12 @@ scheduler.start();
 
 ```js
 class Scheduler {
-  limit = 2;
-  taskQueue = [];
-  count = 0;
+  limit = 2
+  taskQueue = []
+  count = 0
   constructor(limit) {
-    this.limit = limit;
-    this.taskQueue = [];
+    this.limit = limit
+    this.taskQueue = []
   }
 
   addTask(time, value) {
@@ -642,32 +645,33 @@ class Scheduler {
       () =>
         new Promise((resolve, reject) => {
           setTimeout(() => {
-            console.log(value, new Date().getSeconds());
-            resolve();
-          }, time * 1000);
+            console.log(value, new Date().getSeconds())
+            resolve()
+          }, time * 1000)
         })
-    );
+    )
   }
 
   start() {
     if (this.count < this.limit && this.taskQueue.length) {
-      const promiseTask = this.taskQueue.shift();
-      this.count++;
+      const promiseTask = this.taskQueue.shift()
+      this.count++
       promiseTask().then(() => {
-        this.count--;
-        this.start();
-      });
-      if (this.count < this.limit) this.start();
+        this.count--
+        this.start()
+      })
+      if (this.count < this.limit)
+        this.start()
     }
   }
 }
 
-const scheduler = new Scheduler(2);
-scheduler.addTask(1, '1'); // 1s后输出’1'
-scheduler.addTask(2, '2'); // 2s后输出’2'
-scheduler.addTask(1, '3'); // 2s后输出’3'
-scheduler.addTask(1, '4'); // 3s后输出’4'
-console.log('start', new Date().getSeconds());
+const scheduler = new Scheduler(2)
+scheduler.addTask(1, '1') // 1s后输出’1'
+scheduler.addTask(2, '2') // 2s后输出’2'
+scheduler.addTask(1, '3') // 2s后输出’3'
+scheduler.addTask(1, '4') // 3s后输出’4'
+console.log('start', new Date().getSeconds())
 
-scheduler.start();
+scheduler.start()
 ```

@@ -61,9 +61,9 @@ ES6 中引入的新原始数据类型，一切非字符串的对象 key 的集�
 Symbol 值通过 Symbol 构造函数生成，生成一个 **全局独一无二的值** ，即便使用相同的字符串作为参数，它们也不相等。这个参数相当于一种描述
 
 ```js
-let a1 = Symbol('a');
-let a2 = Symbol('a');
-a1 === a2; //false
+const a1 = Symbol('a')
+const a2 = Symbol('a')
+a1 === a2 // false
 ```
 
 Symbol 类型可以显式的转换为字符串

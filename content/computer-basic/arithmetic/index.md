@@ -444,21 +444,22 @@ qsort 会优先使用归并排序，因为数据量小的时候，归并排序�
 #### 二分查找的变形问题
 
 ```js
-const x = [1, 2, 3, 46, 46, 46, 90];
-const bSearch = (array, n, value) => {
-  let low = 0;
-  let high = n - 1;
+const x = [1, 2, 3, 46, 46, 46, 90]
+function bSearch(array, n, value) {
+  let low = 0
+  let high = n - 1
   while (low <= high) {
-    let mid = low + ((high - low) >> 1);
-    if (array[mid] >= value) {
-      high = mid - 1;
-    } else {
-      low = mid + 1;
-    }
+    const mid = low + ((high - low) >> 1)
+    if (array[mid] >= value)
+      high = mid - 1
+    else
+      low = mid + 1
+
   }
-  if (low < n && array[low] === value) return low;
-  else return -1;
-};
+  if (low < n && array[low] === value)
+    return low
+  else return -1
+}
 ```
 
 #### 查找第一个值等于给定值的元素

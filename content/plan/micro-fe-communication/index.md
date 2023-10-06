@@ -27,27 +27,27 @@ qiankun 提供了两种方式：
 
 ```js
 // 主应用：
-import { initGlobalState, MicroAppStateActions } from 'qiankun';
+import { MicroAppStateActions, initGlobalState } from 'qiankun'
 
 // 初始化 state
-const actions: MicroAppStateActions = initGlobalState(state);
+const actions: MicroAppStateActions = initGlobalState(state)
 
 actions.onGlobalStateChange((state, prev) => {
   // state: 变更后的状态; prev 变更前的状态
-  console.log(state, prev);
-});
-actions.setGlobalState(state);
-actions.offGlobalStateChange();
+  console.log(state, prev)
+})
+actions.setGlobalState(state)
+actions.offGlobalStateChange()
 
-//微应用：
+// 微应用：
 // 从生命周期 mount 中获取通信方法，使用方式和 master 一致
 export function mount(props) {
   props.onGlobalStateChange((state, prev) => {
     // state: 变更后的状态; prev 变更前的状态
-    console.log(state, prev);
-  });
+    console.log(state, prev)
+  })
 
-  props.setGlobalState(state);
+  props.setGlobalState(state)
 }
 ```
 
@@ -72,10 +72,10 @@ const props = window.$wujie?.props; // {data: xxx, methods: xxx}
 
 ```js
 // 主应用调用子应用的全局数据
-window.document.querySelector('iframe[name=子应用id]').contentWindow.xxx;
+window.document.querySelector('iframe[name=子应用id]').contentWindow.xxx
 
 // 子应用调用主应用的全局数据
-window.parent.xxx;
+window.parent.xxx
 ```
 
 - 去中心化的通信机制
@@ -119,11 +119,11 @@ webcomponents 的思路
 - history.pushState 结合主动触发 popState 事件
 
 ```js
-window.history.pushState(null, '', 'page2'); // history
-window.history.pushState(null, '', '#/page2'); // hash
+window.history.pushState(null, '', 'page2') // history
+window.history.pushState(null, '', '#/page2') // hash
 
 // 主动触发一次popstate事件
-window.dispatchEvent(new PopStateEvent('popstate', { state: null }));
+window.dispatchEvent(new PopStateEvent('popstate', { state: null }))
 ```
 
 :::warning
@@ -140,18 +140,18 @@ window.dispatchEvent(new PopStateEvent('popstate', { state: null }));
 // 子应用中监听数据变化;
 
 // 监听基座下发的数据变化
-window.microApp.addDataListener(data => {
-  // 当基座下发跳转指令时进行跳转
-  if (data.path) {
-    router.push(data.path);
-  }
-});
-
 // 基座下发跳转指令;
 
-import microApp from '@micro-zoe/micro-app';
+import microApp from '@micro-zoe/micro-app'
 
-microApp.setData('子应用name', { path: '/new-path/' });
+window.microApp.addDataListener((data) => {
+  // 当基座下发跳转指令时进行跳转
+  if (data.path)
+    router.push(data.path)
+
+})
+
+microApp.setData('子应用name', { path: '/new-path/' })
 ```
 
 - 传递路由实例
@@ -168,45 +168,45 @@ microApp.setData('子应用name', { path: '/new-path/' });
 
 ```js
 // 主应用
-import { store } from '@ice/stark-data';
-
-const userInfo = { name: 'Tom', age: 18 };
-store.set('language', 'CH'); // 设置语言
-store.set('user', userInfo); // 设置登录后当前用户信息
-setTimeout(() => {
-  store.set('language', 'EN');
-}, 3000);
+import { store } from '@ice/stark-data'
 
 // 微应用
-import { store } from '@ice/stark-data';
+import { store } from '@ice/stark-data'
+
+const userInfo = { name: 'Tom', age: 18 }
+store.set('language', 'CH') // 设置语言
+store.set('user', userInfo) // 设置登录后当前用户信息
+setTimeout(() => {
+  store.set('language', 'EN')
+}, 3000)
 
 // 监听语言变化
 store.on(
   'language',
-  lang => {
-    console.log(`current language is ${lang}`);
+  (lang) => {
+    console.log(`current language is ${lang}`)
   },
   true
-);
+)
 
 // 获取当前用户
-const userInfo = store.get('user');
+const userInfo = store.get('user')
 ```
 
 - EventBus
 
 ```js
 // 主应用
-import { event } from '@ice/stark-data';
+import { event } from '@ice/stark-data'
+
+// 微应用
+import { event } from '@ice/stark-data'
 
 event.on('freshMessage', () => {
   // 重新获取消息数
-});
+})
 
-// 微应用
-import { event } from '@ice/stark-data';
-
-event.emit('freshMessage');
+event.emit('freshMessage')
 ```
 
 - props

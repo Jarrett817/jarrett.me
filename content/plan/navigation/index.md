@@ -31,8 +31,8 @@
 
 ```js
 router.beforeEach((to, from, next) => {
-  sessionStorage.set(to.name, from);
-});
+  sessionStorage.set(to.name, from)
+})
 ```
 
 同时提供一个返回方法，获取缓存的路由信息并使用 `push` 返回

@@ -149,33 +149,34 @@ Author.prototype.getBooks = function () {
 
 ```ts
 abstract class Strategy {
-  abstract AlogorithmInterface(): void;
+  abstract AlogorithmInterface(): void
 }
 
 class ConcreteStrategyA extends Strategy {
   AlogorithmInterface() {
-    consol.log('A算法');
+    consol.log('A算法')
   }
 }
 
 class ConcreteStrategyB extends Strategy {
   AlogorithmInterface() {
-    console.log('B算法');
+    console.log('B算法')
   }
 }
 
 class Context {
   constructor(strategy) {
-    this.strategy = strategy;
+    this.strategy = strategy
   }
+
   ContextInterface() {
-    this.strategy.AlogorithmInterface();
+    this.strategy.AlogorithmInterface()
   }
 }
 
 // 使用
-const context = new Context(new ConcreteStrategyA());
-context.ContextInterface();
+const context = new Context(new ConcreteStrategyA())
+context.ContextInterface()
 ```
 
 其实就是封装多个不同功能的函数，用条件语句去匹配对应的策略，为了避免客户端需要写条件，可以结合简单工厂，将条件匹配放到工厂内
@@ -348,22 +349,23 @@ publisher.notify(channel);
 // 画一个小人，需要有头、身体、手脚
 abstract class PersonBuilder {
   constructor(graph, pen) {
-    this.graph = graph;
-    this.pen = pen;
+    this.graph = graph
+    this.pen = pen
   }
-  abstract buildHead(): void;
-  abstract buildBody(): void;
-  abstract buildArmLeft(): void;
-  abstract buildArmRight(): void;
-  abstract buildLegLeft(): void;
-  abstract buildLegRight(): void;
+  abstract buildHead(): void
+  abstract buildBody(): void
+  abstract buildArmLeft(): void
+  abstract buildArmRight(): void
+  abstract buildLegLeft(): void
+  abstract buildLegRight(): void
 }
 
 // 瘦人类
 class PersonThinBuilder extends PersonBuilder {
   constructor(graph, pen) {
-    super(graph, pen);
+    super(graph, pen)
   }
+
   buildHead() {}
   buildBody() {}
   buildArmLeft() {}
@@ -376,15 +378,16 @@ class PersonThinBuilder extends PersonBuilder {
 class PersonDirector {
   constructor(pb) {
     // 用户需要告诉指挥者要什么样的小人
-    this.pb = pb;
+    this.pb = pb
   }
+
   CreatePerson() {
-    pb.buildHead();
-    pb.buildBody();
-    pd.buildArmLeft();
-    pd.buildArmRight();
-    pd.buildLegLeft();
-    pd.buildLegRight();
+    pb.buildHead()
+    pb.buildBody()
+    pd.buildArmLeft()
+    pd.buildArmRight()
+    pd.buildLegLeft()
+    pd.buildLegRight()
   }
 }
 ```
@@ -849,18 +852,18 @@ const util = {
 ```js
 // 表示一个城市的所有汽车，需要保存每一辆汽车的详细情况甚至及其所有权的详细情况
 const Car = function (year, price) {
-  this.year = year;
-  this.price = price;
+  this.year = year
+  this.price = price
   // 各种详细信息
-};
+}
 Car.prototype = {
   getYear() {
-    return this.year;
+    return this.year
   },
   getPrice() {
-    return this.price;
+    return this.price
   },
-};
+}
 ```
 
 --
@@ -872,20 +875,21 @@ Car.prototype = {
 ```js
 // 我们需要创建一个工厂来生成汽车
 const carFactory = (function () {
-  const createdCars = {};
+  const createdCars = {}
   return {
     createCar(year, price) {
-      if (createdClass[year + '-' + price]) {
-        //如果汽车实例存在，就直接返回已有的实例
-        return createdCars[year + '-' + price];
-      } else {
-        const car = new Car(year, owner);
-        createdCars[year + 'price' + price] = car;
-        return car;
+      if (createdClass[`${year}-${price}`]) {
+        // 如果汽车实例存在，就直接返回已有的实例
+        return createdCars[`${year}-${price}`]
+      }
+      else {
+        const car = new Car(year, owner)
+        createdCars[`${year}price${price}`] = car
+        return car
       }
     },
-  };
-})();
+  }
+})()
 ```
 
 还需要管理外在状态
@@ -893,18 +897,18 @@ const carFactory = (function () {
 ```js
 // 用一个单体模式封装外在状态数据的管理器
 const CarRecordManager = (function () {
-  const carRecordDatabase = {};
+  const carRecordDatabase = {}
   return {
-    addCarRecord: function (year, price, owner, age) {
-      const car = CarFactory.createCar(year, owner);
+    addCarRecord(year, price, owner, age) {
+      const car = CarFactory.createCar(year, owner)
       carRecordDatabase[owner] = {
         car,
         age,
-      };
+      }
     },
     // 其他操作
-  };
-})();
+  }
+})()
 ```
 
 从 Car 类剥离的数据都在 CarRecordManage 这个单体的私有属性 carRecordDatabase 中。
@@ -918,57 +922,57 @@ const CarRecordManager = (function () {
 ```js
 // 日历，顺序显示每月中的各天，还会按顺序显示一年中的各个月
 const CalendarYear = function (year, parent) {
-  this.year = year;
-  this.element = document.createElement('div');
-  this.element.style.display = 'none';
-  parent.appendChild(this.element);
+  this.year = year
+  this.element = document.createElement('div')
+  this.element.style.display = 'none'
+  parent.appendChild(this.element)
   function isLeapYear(y) {
-    return y > 0 && !(y % 4) && (y % 100 || !(y % 400));
+    return y > 0 && !(y % 4) && (y % 100 || !(y % 400))
   }
-  this.months = [];
-  this.numDays = [31, isLeapYear(this.year) ? 29 : 28, 31, 30];
-};
+  this.months = []
+  this.numDays = [31, isLeapYear(this.year) ? 29 : 28, 31, 30]
+}
 
 CalendarYear.prototype = {
-  display: function () {
-    for (let i = 0, len = this.months.length; i < len; i++) {
-      this.months[i].display();
-    }
-    this.element.style.display = 'block';
+  display() {
+    for (let i = 0, len = this.months.length; i < len; i++)
+      this.months[i].display()
+
+    this.element.style.display = 'block'
   },
-};
+}
 const CalendarMonth = function (monthNum, numDays, parent) {
-  this.monthNum = monthNum;
-  this.element = document.createElement('div');
-  this.element.style.display = 'none';
-  parent.appendChild(this.element);
-  for (let i = 0, len = numDays; i < len; i++) {
-    this.days[i] = new CalendarDay(i, this.element);
-  }
-  this.months = [];
-  this.numDays = [31, isLeapYear(this.year) ? 29 : 28, 31, 30];
-};
+  this.monthNum = monthNum
+  this.element = document.createElement('div')
+  this.element.style.display = 'none'
+  parent.appendChild(this.element)
+  for (let i = 0, len = numDays; i < len; i++)
+    this.days[i] = new CalendarDay(i, this.element)
+
+  this.months = []
+  this.numDays = [31, isLeapYear(this.year) ? 29 : 28, 31, 30]
+}
 CalendarMonth.prototype = {
-  display: function () {
-    for (let i = 0, len = this.days.length; i < len; i++) {
-      this.days[i].display();
-    }
-    this.element.style.display = 'block';
+  display() {
+    for (let i = 0, len = this.days.length; i < len; i++)
+      this.days[i].display()
+
+    this.element.style.display = 'block'
   },
-};
+}
 
 const CalendarDay = function (date, parent) {
-  this.date = date;
-  this.element = document.createElement('div');
-  this.element.style.display = 'none';
-  parent.appendChild(this.element);
-};
+  this.date = date
+  this.element = document.createElement('div')
+  this.element.style.display = 'none'
+  parent.appendChild(this.element)
+}
 CalendarDay.prototype = {
-  display: function () {
-    this.element.style.display = 'block';
-    this.element.innerHTML = this.date;
+  display() {
+    this.element.style.display = 'block'
+    this.element.innerHTML = this.date
   },
-};
+}
 ```
 
 根据这段代码的实现，我们不得不为一年创建 365 个 CalendarDay 对象。
@@ -980,14 +984,14 @@ CalendarDay.prototype = {
 - 第一步，把 CalendarDay 对象转化为享元对象，除去其中所有保存的数据
 
 ```js
-const CalendarDay = function () {};
+const CalendarDay = function () {}
 CalendarDay.prototype = {
-  display: function (date, parent) {
-    const element = document.createElement('div');
-    parent.appendChild(element);
-    element.innerHTML = date;
+  display(date, parent) {
+    const element = document.createElement('div')
+    parent.appendChild(element)
+    element.innerHTML = date
   },
-};
+}
 ```
 
 这里直接实例化该对象`const calendarDay=new CalendarDay()`
@@ -997,24 +1001,24 @@ CalendarDay.prototype = {
 ```js
 // 复合物
 const CalendarMonth = function (monthNum, numDays, parent) {
-  this.monthNum = monthNum;
-  this.element = document.createElement('div');
-  this.element.style.display = 'none';
-  parent.appendChild(this.element);
+  this.monthNum = monthNum
+  this.element = document.createElement('div')
+  this.element.style.display = 'none'
+  parent.appendChild(this.element)
 
-  this.days = [];
-  for (let i = 0, len = numDays; i < len; i++) {
-    this.days[i] = CalendarDay;
-  }
-};
+  this.days = []
+  for (let i = 0, len = numDays; i < len; i++)
+    this.days[i] = CalendarDay
+
+}
 CalendarMonth.prototype = {
-  display: function () {
-    for (let i = 0, len = this.days.length; i < len; i++) {
-      this.days[i].display(i, this.element);
-    }
-    this.element.style.display = 'block';
+  display() {
+    for (let i = 0, len = this.days.length; i < len; i++)
+      this.days[i].display(i, this.element)
+
+    this.element.style.display = 'block'
   },
-};
+}
 ```
 
 此例子中，没有像之前的管理器一样使用一个中心数据库，其实其他类也没做什么修改。
@@ -1055,20 +1059,20 @@ CalendarMonth.prototype = {
 
 ```js
 const publicLibraryVirtualProxy = function (catalog) {
-  this.library = null;
-  this.catalog = catalog;
-};
+  this.library = null
+  this.catalog = catalog
+}
 publicLibraryVirtualProxy.prototye = {
-  _initializeLibrary: function () {
-    if (this.library === null) {
-      this.library = new publicLibraryVirtualProxy(this.catalog);
-    }
+  _initializeLibrary() {
+    if (this.library === null)
+      this.library = new publicLibraryVirtualProxy(this.catalog)
+
   },
-  findBooks: function (searchString) {
-    this._initializeLibrary();
-    return this.library.findBooks(searchString);
+  findBooks(searchString) {
+    this._initializeLibrary()
+    return this.library.findBooks(searchString)
   },
-};
+}
 ```
 
 虚拟代理对于前端程序员来说比较有用，还有其他代理类型
@@ -1103,67 +1107,70 @@ publicLibraryVirtualProxy.prototye = {
 // 一个休假申请的例子，先建一个管理者类
 abstract class Manager {
   constructor(name: string) {
-    this.name = name;
+    this.name = name
   }
+
   setSuperior(superior: Manager) {
     // 设置上级
-    this.superior = superior;
+    this.superior = superior
   }
-  abstract requestApplications(request): void;
+  abstract requestApplications(request): void
 }
 
 // 再来一个经理类
 class commonManager extends Manager {
   constructor(name) {
-    super();
-    this.name = name;
+    super()
+    this.name = name
   }
+
   requestApplications(request) {
     // 经理只能批准两天内的假期
-    if (request.Request === '请假' && request.Number <= 2) {
-      console.log('经理批准');
-    } else if (superior !== null) {
-      superior.RequestApplications(request);
-    }
+    if (request.Request === '请假' && request.Number <= 2)
+      console.log('经理批准')
+    else if (superior !== null)
+      superior.RequestApplications(request)
+
   }
 }
 
 // 还有总监类
 class Majordomo extends Manager {
   constructor(name) {
-    super();
-    this.name = name;
+    super()
+    this.name = name
   }
+
   requestApplications(request) {
-    if (request.RequestType === '请假' && request.Number <= 5) {
-      console.log('总监批准');
-    } else if (superior !== null) {
-      superior.RequestApplications(request);
-    }
+    if (request.RequestType === '请假' && request.Number <= 5)
+      console.log('总监批准')
+    else if (superior !== null)
+      superior.RequestApplications(request)
+
   }
 }
 
 class GeneralManager extends Manager {
   RequestApplications(request) {
-    if (request.RequestType === '请假') {
-      console.log('总经理批准请假');
-    } else if (request.RequestType === '加薪') {
-      console.log('总经理批准加薪');
-    }
+    if (request.RequestType === '请假')
+      console.log('总经理批准请假')
+    else if (request.RequestType === '加薪')
+      console.log('总经理批准加薪')
+
   }
 }
 
 // 使用举例
-const jinli = new CommonManager('经理');
-const zongjian = new Majordomo('总监');
-const zongjingli = new GeneralManager('总经理');
-jinli.SetSuperior(zongjian);
-zongjian.SetSuperior(zongjingli);
+const jinli = new CommonManager('经理')
+const zongjian = new Majordomo('总监')
+const zongjingli = new GeneralManager('总经理')
+jinli.SetSuperior(zongjian)
+zongjian.SetSuperior(zongjingli)
 
-const request = new Request();
-request.RequestType = '请假';
-request.RequestContent = '小菜请假';
-request.Number = 1;
-jinli.RequestApplications(request);
+const request = new Request()
+request.RequestType = '请假'
+request.RequestContent = '小菜请假'
+request.Number = 1
+jinli.RequestApplications(request)
 // 客户端的申请都是由经理发起，但具体决策者是谁，客户端不知道
 ```

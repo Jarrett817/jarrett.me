@@ -48,36 +48,37 @@ todoList
 ```
 
 ```js
-import { customRef } from 'vue';
+import { customRef } from 'vue'
 
 export function useDebouncedRef(value, delay = 200) {
-  let timeout;
+  let timeout
   return customRef((track, trigger) => {
     return {
       get() {
-        track();
-        return value;
+        track()
+        return value
       },
       set(newValue) {
-        clearTimeout(timeout);
+        clearTimeout(timeout)
         timeout = setTimeout(() => {
-          value = newValue;
-          trigger();
-        }, delay);
+          value = newValue
+          trigger()
+        }, delay)
       }
-    };
-  });
+    }
+  })
 }
 ```
 
 ```vue
 <script setup>
-import { useDebouncedRef } from './debouncedRef';
-const text = useDebouncedRef('hello');
+import { useDebouncedRef } from './debouncedRef'
+
+const text = useDebouncedRef('hello')
 </script>
 
 <template>
-  <input v-model="text" />
+  <input v-model="text">
 </template>
 ```
 
@@ -89,16 +90,16 @@ const text = useDebouncedRef('hello');
 ## 常见 composition api 原理
 
 ```js
-import { ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue'
 
-const count = ref(0);
+const count = ref(0)
 
 watchEffect(() => {
-  document.body.innerHTML = `计数：${count.value}`; // 执行某个行为，比如更新视图
-});
+  document.body.innerHTML = `计数：${count.value}` // 执行某个行为，比如更新视图
+})
 
 // 更新 DOM
-count.value++;
+count.value++
 ```
 
 getter、setter，以及依赖的收集和追踪
@@ -106,40 +107,42 @@ getter、setter，以及依赖的收集和追踪
 ```js
 function createGetter(isReadonly = false, shallow = false) {
   return function get(target, key) {
-    const res = Reflect.get(target, key);
-    if (shallow) return res;
-    if (isRef(res)) return res.value;
+    const res = Reflect.get(target, key)
+    if (shallow)
+      return res
+    if (isRef(res))
+      return res.value
     // 对于嵌套的对象进行响应式处理
-    if (isObject(res)) {
-      return isReadonly ? readonly(res) : reactive(res);
-    }
-    !isReadonly && track(target, key);
-    return res;
-  };
+    if (isObject(res))
+      return isReadonly ? readonly(res) : reactive(res)
+
+    !isReadonly && track(target, key)
+    return res
+  }
 }
 
 function createSetter() {
   return function set(target, key, value) {
-    const res = Reflect.set(target, key, value);
+    const res = Reflect.set(target, key, value)
     // 触发依赖
-    trigger(target, key);
-    return res;
-  };
+    trigger(target, key)
+    return res
+  }
 }
 
-let activeEffect;
-let targetMap = new WeakMap();
+let activeEffect
+const targetMap = new WeakMap()
 
 function track(target, key) {
   if (activeEffect) {
-    const effects = getSubscribersForProperty(target, key);
-    effects.add(activeEffect);
+    const effects = getSubscribersForProperty(target, key)
+    effects.add(activeEffect)
   }
 }
 
 function trigger(target, key) {
-  const effects = getSubscribersForProperty(target, key);
-  effects.forEach(effect => effect());
+  const effects = getSubscribersForProperty(target, key)
+  effects.forEach(effect => effect())
 }
 ```
 
@@ -147,32 +150,33 @@ function trigger(target, key) {
 
 ```js
 function reactive(target) {
-  if (isReadonly(target)) return target;
+  if (isReadonly(target))
+    return target
   return new Proxy(target, {
     get: createGetter(),
     set: createSetter()
-  });
+  })
 }
 
 function shallowReactive(target) {
   return new Proxy(target, {
     get: createGetter(false, true),
     set: createSetter()
-  });
+  })
 }
 
 function ref(value) {
   const refObject = {
     get value() {
-      track(refObject, 'value');
-      return value;
+      track(refObject, 'value')
+      return value
     },
     set value(newValue) {
-      value = newValue;
-      trigger(refObject, 'value');
+      value = newValue
+      trigger(refObject, 'value')
     }
-  };
-  return refObject;
+  }
+  return refObject
 }
 
 // function readonlySet(target, key, value) {
@@ -184,14 +188,14 @@ function readonly(target) {
   return new Proxy(target, {
     get: createGetter(true),
     set: readonlySet
-  });
+  })
 }
 
 function shallowReadonly() {
   return new Proxy(target, {
     get: createGetter(true, true),
     set: readonlySet
-  });
+  })
 }
 ```
 
@@ -199,36 +203,36 @@ function shallowReadonly() {
 最终的目的是实现 **数据变更->触发副作用函数**
 
 ```js
-let activeEffect;
+let activeEffect
 
 class ReactiveEffect {
-  private _fn;
-  active = true;
+  private _fn
+  active = true
   constructor(fn, public scheduler) {
-    this._fn = fn;
+    this._fn = fn
   }
+
   run() {
-    if (!this.active) return this._fn();
-    shouldTrack = true;
-    activeEffect = this;
+    if (!this.active)
+      return this._fn()
+    shouldTrack = true
+    activeEffect = this
     // 在执行this.fn的时候，fn里所用到的reactive变量，会将本对象作为依赖收集
-    const result = this._fn();
+    const result = this._fn()
     // 已经收集好依赖了，将shouldTrack置为false，表明在这个fn中所用到的reactive变量都已完成依赖收集
     // 不会再有另外的reactive变量以此为依赖了，因此关闭掉
-    shouldTrack = false;
-    return result;
+    shouldTrack = false
+    return result
   }
 
   stop() {
     if (this.active) {
-      cleanupEffect(this);
-      this.active = false;
-      shouldTrack = false;
+      cleanupEffect(this)
+      this.active = false
+      shouldTrack = false
     }
   }
 }
-
-
 ```
 
 ReactiveEffect 封装了副作用函数的注册机制
@@ -237,33 +241,33 @@ ReactiveEffect 封装了副作用函数的注册机制
 
 ```js
 function effect(fn, options) {
-  const _effect = new ReactiveEffect(fn, options.scheduler);
-  _effect.run();
-  return runner;
+  const _effect = new ReactiveEffect(fn, options.scheduler)
+  _effect.run()
+  return runner
 }
 
 function watchEffect(update) {
-  effect(update);
+  effect(update)
 }
 
 function computed(getter) {
-  let dirty = true;
+  let dirty = true
   const effect = new ReactiveEffect(getter, () => {
-    if (!dirty) {
-      dirty = true;
-    }
-  });
-  let value;
+    if (!dirty)
+      dirty = true
+
+  })
+  let value
   return {
     get value() {
       if (dirty) {
-        dirty = false;
+        dirty = false
         // 只在执行get时才去run
-        value = this._effect.run();
+        value = this._effect.run()
       }
-      return value;
+      return value
     }
-  };
+  }
 }
 ```
 
@@ -291,9 +295,9 @@ _会产生副作用的函数_
 
 ```js
 // effect函数的执行会直接或间接影响其他函数的执行
-let a = 1;
+let a = 1
 function effect() {
-  document.body.innerText = 'hello vue3';
-  a = 2; // 修改了全局变量也是一个副作用
+  document.body.innerText = 'hello vue3'
+  a = 2 // 修改了全局变量也是一个副作用
 }
 ```
