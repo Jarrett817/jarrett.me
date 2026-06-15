@@ -1,0 +1,39 @@
+.internExperience {
+  > ol {
+    margin-top: 2px;
+    list-style-position: inside;
+    padding: 0;
+
+    > li {
+      margin: 12px 0;
+
+      > header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        margin-bottom: 2px;
+
+        h4:first-child {
+          font-weight: 700;
+        }
+
+        h4:last-child {
+          flex-shrink: 0;
+          font-size: var(--resume-secondary);
+          font-weight: 600;
+          color: #6b7280;
+        }
+      }
+
+      > ul {
+        margin-top: 2px;
+
+        li {
+          line-height: 1.48;
+        }
+      }
+    }
+  }
+}

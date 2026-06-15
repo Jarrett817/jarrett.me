@@ -1,0 +1,62 @@
+@use '../../.vitepress/theme/style/function.scss' as *;
+
+.bio {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 4px;
+
+  h1 {
+    font-size: var(--resume-name);
+    margin-bottom: 6px;
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+
+    @include Mobile {
+      font-size: var(--resume-name);
+    }
+  }
+
+  .summary {
+    font-size: var(--resume-body);
+    font-weight: 500;
+    line-height: 1.48;
+    color: var(--blue-indigo-bunting);
+    margin: 0 0 8px;
+  }
+
+  .bio-meta,
+  .bio-contact {
+    font-size: var(--resume-secondary);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .bio-meta {
+    color: #6b7280;
+    margin-top: 6px;
+  }
+
+  .bio-contact {
+    color: #4b5563;
+    margin-top: 5px;
+  }
+
+  img {
+    width: 76px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+    border: 1px solid #e5e7eb;
+  }
+}
+
+.head-line {
+  height: 2px;
+  width: 100%;
+  background: var(--blue-indigo-bunting);
+  opacity: 0.75;
+  margin-bottom: 2px;
+}

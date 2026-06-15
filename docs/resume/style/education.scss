@@ -1,0 +1,13 @@
+.education > p {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+
+  label:last-child {
+    flex-shrink: 0;
+    font-size: var(--resume-secondary);
+    color: #6b7280;
+  }
+}

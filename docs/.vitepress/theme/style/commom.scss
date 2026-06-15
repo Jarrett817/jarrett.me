@@ -1,0 +1,54 @@
+@use './colors.scss' as *;
+@use 'vfonts/FiraCode.css' as *;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 覆盖vitepress默认的颜色样式 */
+* {
+  scroll-behavior: smooth;
+}
+
+.no-sidebar {
+  .home {
+    padding-top: 0 !important;
+    &-hero {
+      padding: 0 !important;
+      margin: var(--header-height) 0 !important;
+      .figure {
+        padding: 0 !important;
+        vertical-align: text-top;
+
+        & > .image {
+          margin: 0;
+          height: 100%;
+          width: 100%;
+          max-height: 400px;
+          object-fit: cover;
+        }
+      }
+    }
+  }
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #fff;
+  border-radius: 22px;
+  border: none;
+}
+
+*::-webkit-scrollbar {
+  &-thumb {
+    background-color: var(--blue-atoll);
+  }
+}

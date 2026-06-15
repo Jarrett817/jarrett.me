@@ -1,0 +1,70 @@
+.projects {
+  .space-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  & > ol {
+    margin-top: 2px;
+    list-style-position: inside;
+    padding: 0;
+
+    > li {
+      padding: 10px 0 12px;
+      border-bottom: 1px solid #f0f1f3;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &.project-break {
+        @media print {
+          page-break-before: always;
+          padding-top: 0;
+        }
+      }
+
+      > h4 {
+        font-size: var(--resume-title);
+        font-weight: 700;
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #e8eaed;
+      }
+
+      > p {
+        line-height: 1.48;
+        color: #4b5563;
+      }
+
+      .field-label {
+        position: relative;
+        margin-top: 4px;
+
+        &::before {
+          content: '';
+          display: inline-block;
+          height: 0.45rem;
+          background-color: var(--blue-primary);
+          opacity: 0.18;
+          position: absolute;
+          left: 0;
+          bottom: 1px;
+          width: 100%;
+          z-index: 0;
+          border-radius: 2px;
+        }
+      }
+
+      > ul li {
+        line-height: 1.48;
+      }
+
+      a {
+        padding: 1px 4px;
+        white-space: nowrap;
+      }
+    }
+  }
+}

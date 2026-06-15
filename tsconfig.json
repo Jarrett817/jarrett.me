@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "isolatedModules": true,
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom"],
+    "baseUrl": ".",
+    // "paths": {
+    //   "@/*": ["./docs/.vitepress/*"]
+    // },
+    "types": ["naive-ui/volar", "vite/client"]
+  },
+  // .xx文件夹路径会被忽略，需要写明具体路径
+  "include": [
+    "docs/.vitepress/**/*.ts",
+    "docs/.vitepress/**/*.d.ts",
+    "docs/.vitepress/**/*.tsx",
+    "docs/.vitepress/**/*.vue",
+    "docs/**/*.md",
+    "docs/**/*.vue"
+  ],
+  "exclude": ["docs/.vitepress/dist"]
+}

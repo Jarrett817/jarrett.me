@@ -1,0 +1,34 @@
+{
+  "extends": [
+    "@vue/typescript/recommended",
+    "@vue/prettier",
+    "@vue/prettier/@typescript-eslint",
+    "eslint:recommended",
+    "plugin:vue/vue3-essential",
+    "airbnb-base"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "plugins": ["vue"],
+  "rules": {
+    "arrow-parens": ["error", "as-needed"],
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "never",
+        "objects": "never",
+        "imports": "never",
+        "exports": "never",
+        "functions": "never"
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["*.vue"],
+      "rules": {}
+    }
+  ]
+}

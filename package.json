@@ -1,0 +1,54 @@
+{
+  "name": "jarrett-blog",
+  "version": "1.0.0",
+  "description": "Jarrett's blog",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "serve": "vitepress serve docs",
+    "promise:test": "promises-aplus-tests /docs/practice/promise/index.js"
+  },
+  "author": "Jarrett",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^18.19.130",
+    "@types/reveal.js": "^5.2.2",
+    "@types/uuid": "^8.3.4",
+    "@vicons/carbon": "^0.12.0",
+    "@vitejs/plugin-vue-jsx": "^4.2.0",
+    "autoprefixer": "^10.4.27",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-vue": "^9.33.0",
+    "postcss": "^8.5.8",
+    "promises-aplus-tests": "^2.1.2",
+    "sass": "^1.98.0",
+    "tailwindcss": "^3.4.19",
+    "unplugin-vue-components": "^0.25.2",
+    "vfonts": "^0.0.3",
+    "vite-plugin-monaco-editor": "^1.1.0"
+  },
+  "dependencies": {
+    "@vueuse/core": "^10.11.1",
+    "axios": "^1.13.6",
+    "mind-elixir": "^4.6.2",
+    "monaco-editor": "^0.52.2",
+    "naive-ui": "^2.44.1",
+    "pixi.js": "^7.4.3",
+    "reveal.js": "^5.2.1",
+    "uuid": "^8.3.2",
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.30"
+  },
+  "engines": {
+    "node": ">=14",
+    "pnpm": ">=5"
+  },
+  "workspaces": [
+    "docs/.vitepress/packages/**",
+    "!docs/.vitepress/packages/**/node_modules/**"
+  ]
+}

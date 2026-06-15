@@ -1,0 +1,165 @@
+@use '../../.vitepress/theme/style/function.scss' as *;
+
+article {
+  --resume-name: 28px;
+  --resume-section: 17px;
+  --resume-title: 15px;
+  --resume-body: 14px;
+  --resume-secondary: 13px;
+  --resume-caption: 12px;
+
+  width: 21cm;
+  min-height: 29.7cm;
+  background: white;
+  margin: 0 auto;
+  overflow: auto;
+  padding: 1.1em 2.6em 1.4em;
+  height: 100%;
+  color: #3c3c43;
+
+  transition: color 0.5s, background-color 0.5s;
+  line-height: 1.52;
+  font-size: var(--resume-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+
+  @include Mobile {
+    --resume-name: 24px;
+    --resume-section: 16px;
+    --resume-title: 14px;
+    --resume-body: 13px;
+    --resume-secondary: 12px;
+    padding: 1em 1.2em;
+  }
+
+  .column-line {
+    color: #6c6c6c;
+    opacity: 0.4;
+    margin: 0 6px;
+  }
+
+  .field-label {
+    display: inline-block;
+    font-size: var(--resume-secondary);
+    font-weight: 600;
+    color: #4b5563;
+    margin: 6px 0 2px;
+  }
+
+  .tech-stack {
+    display: inline;
+    font-size: var(--resume-secondary);
+    color: #4b5563;
+    background: #f3f4f6;
+    padding: 1px 6px;
+    border-radius: 3px;
+    line-height: 1.5;
+  }
+
+  .metric {
+    font-weight: 700;
+    color: var(--blue-indigo-bunting);
+  }
+}
+
+p {
+  margin: 0.3em 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  margin: 0;
+  color: var(--blue-indigo-bunting);
+}
+
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 8px;
+  font-size: var(--resume-section);
+  letter-spacing: 0.02em;
+
+  &::before {
+    content: '';
+    flex-shrink: 0;
+    width: 3px;
+    height: 0.95em;
+    background: var(--blue-indigo-bunting);
+    border-radius: 1px;
+  }
+
+  @include Mobile {
+    font-size: var(--resume-section);
+  }
+}
+
+h4 {
+  font-size: var(--resume-title);
+  margin-bottom: 4px;
+
+  @include Mobile {
+    font-size: var(--resume-title);
+  }
+}
+
+ol,
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul {
+  list-style: disc;
+  padding-left: 1rem;
+}
+
+a {
+  color: #4b5563;
+  text-decoration: none;
+  border-bottom: 1px solid #d1d5db;
+
+  &:hover {
+    color: var(--blue-indigo-bunting);
+    border-bottom-color: var(--blue-indigo-bunting);
+  }
+}
+
+.page-num {
+  text-align: right;
+  font-size: var(--resume-caption);
+}
+
+li {
+  margin: 5px 0;
+  overflow-wrap: break-word;
+  white-space: break-spaces;
+}
+
+section {
+  margin: 6px 0;
+}
+
+.split-line {
+  width: 100%;
+  background: #e5e7eb;
+  height: 1px;
+  margin: 8px 0;
+}
+
+.prominent {
+  color: var(--blue-indigo-bunting);
+}
+
+strong {
+  font-weight: 600;
+  color: #374151;
+}

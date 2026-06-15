@@ -1,0 +1,28 @@
+.skills {
+  .skills-columns {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    margin-top: 6px;
+  }
+
+  .skills-group {
+    flex: 1;
+  }
+
+  .skills-group-title {
+    font-size: var(--resume-body);
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 6px;
+  }
+
+  ul li {
+    line-height: 1.48;
+    margin: 4px 0;
+  }
+}
+
+.advantages ul li {
+  line-height: 1.48;
+}

@@ -1,0 +1,75 @@
+---
+alwaysApply: true
+---
+
+外部 Markdown
+你可以将内容编写为单独的文件，并让 reveal.js 在运行时加载它。请注意，分隔符参数决定了幻灯片在外部文件中的分隔方式：data-separator 属性定义了水平幻灯片的正则表达式（默认为 ^\r?\n---\r?\n$，即换行符边界的水平规则），data-separator-vertical 定义了垂直幻灯片（默认禁用）。data-separator-notes 属性是一个正则表达式，用于指定当前幻灯片演讲者注释的开头（默认为 notes?:，因此它将匹配 "注意：" 和 "备注："）。data-charset 属性是可选的，用于指定加载外部文件时要使用的字符集。
+
+在本地使用时，此功能需要 reveal.js 从本地 Web 服务器运行。以下示例自定义了所有可用选项：
+
+<section
+  data-markdown="example.md"
+  data-separator="^\n\n\n"
+  data-separator-vertical="^\n\n"
+  data-separator-notes="^Note:"
+  data-charset="iso-8859-15"
+>
+  <!--
+        Note that Windows uses `\r\n` instead of `\n` as its linefeed character.
+        For a regex that supports all operating systems, use `\r?\n` instead of `\n`.
+    -->
+</section>
+
+元素属性
+可以使用特殊语法（通过 HTML 注释）向 Markdown 元素添加属性。此功能对片段等非常有用。
+
+<section data-markdown>
+  <script type="text/template">
+    - Item 1 <!-- .element: class="fragment" data-fragment-index="2" -->
+    - Item 2 <!-- .element: class="fragment" data-fragment-index="1" -->
+  </script>
+</section>
+
+幻灯片属性
+可以使用特殊语法（通过 HTML 注释）向 Markdown 生成的幻灯片 <section> 元素添加属性。
+
+<section data-markdown>
+  <script type="text/template">
+    <!-- .slide: data-background="#ff0000" -->
+      Markdown content
+  </script>
+</section>
+
+语法高亮
+reveal.js 内置了强大的语法高亮功能。使用如下所示的括号语法，你可以高亮显示单行内容，甚至可以逐步演示多个单独的高亮显示。了解更多关于行高亮的信息。
+
+<section data-markdown>
+  <textarea data-template>
+    ```js [1-2|3|4]
+    let a = 1;
+    let b = 2;
+    let c = x => 1 + 2 + x;
+    c(3);
+    ```
+  </textarea>
+</section>
+let a = 1;
+let b = 2;
+let c = x => 1 + 2 + x;
+c(3);
+
+let a = 1 ; let b = 2 ; let c = x => 1 + 2 + x; c ( 3 ); let a = 1 ; let b = 2 ; let c = x => 1 + 2 + x; c ( 3 ); let a = 1 ; let b = 2 ; let c = x => 1 + 2 + x; c ( 3 );
+
+行号偏移
+你可以在高亮部分的开头添加数字和冒号来添加 行号偏移。
+
+<section data-markdown>
+  <textarea data-template>
+    ```js [712: 1-2|3|4]
+    let a = 1;
+    let b = 2;
+    let c = x => 1 + 2 + x;
+    c(3);
+    ```
+  </textarea>
+</section>
