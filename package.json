@@ -7,9 +7,7 @@
     "dev": "vitepress dev docs",
     "build": "vitepress build docs",
     "serve": "vitepress serve docs",
-    "promise:test": "promises-aplus-tests /docs/practice/promise/index.js",
-    "lint": "eslint . --ext .js,.ts,.vue",
-    "typecheck": "vue-tsc --noEmit"
+    "promise:test": "promises-aplus-tests /docs/practice/promise/index.js"
   },
   "author": "Jarrett",
   "license": "MIT",
