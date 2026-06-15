@@ -4,12 +4,12 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 4px;
+  gap: 12px;
+  margin-bottom: 2px;
 
   h1 {
     font-size: var(--resume-name);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     line-height: 1.15;
     letter-spacing: 0.02em;
 
@@ -21,9 +21,9 @@
   .summary {
     font-size: var(--resume-body);
     font-weight: 500;
-    line-height: 1.48;
+    line-height: 1.4;
     color: var(--blue-indigo-bunting);
-    margin: 0 0 8px;
+    margin: 0 0 5px;
   }
 
   .bio-meta,
@@ -44,8 +44,8 @@
   }
 
   img {
-    width: 76px;
-    height: 96px;
+    width: 68px;
+    height: 86px;
     object-fit: cover;
     border-radius: 4px;
     flex-shrink: 0;

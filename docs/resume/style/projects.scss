@@ -11,36 +11,29 @@
     padding: 0;
 
     > li {
-      padding: 10px 0 12px;
+      padding: 6px 0 8px;
       border-bottom: 1px solid #f0f1f3;
 
       &:last-child {
         border-bottom: none;
       }
 
-      &.project-break {
-        @media print {
-          page-break-before: always;
-          padding-top: 0;
-        }
-      }
-
       > h4 {
         font-size: var(--resume-title);
         font-weight: 700;
-        margin-bottom: 6px;
-        padding-bottom: 4px;
+        margin-bottom: 4px;
+        padding-bottom: 2px;
         border-bottom: 1px solid #e8eaed;
       }
 
       > p {
-        line-height: 1.48;
+        line-height: 1.4;
         color: #4b5563;
       }
 
       .field-label {
         position: relative;
-        margin-top: 4px;
+        margin-top: 2px;
 
         &::before {
           content: '';
@@ -58,7 +51,7 @@
       }
 
       > ul li {
-        line-height: 1.48;
+        line-height: 1.4;
       }
 
       a {

@@ -9,7 +9,7 @@
         <div class="flex-1">
           <h1>王俊然</h1>
           <p class="summary">
-            前端开发 · 4 年+ · 工程化 / 微前端 / AI Agent 辅助研发<br />
+            前端开发 · 5 年 · 工程化 / 微前端 / AI Agent 辅助研发<br />
             擅长复杂存量迁移、产品提升、构建优化与可复用组件沉淀
           </p>
           <p class="bio-meta">
@@ -61,11 +61,9 @@
                 层级、跨应用样式隔离）</li
               >
               <li
-                >AI Agent 辅助研发：理解 Agent
-                原理与架构（任务规划、工具调用、上下文编排）；熟练使用 Claude、Cursor、Kiro，能设计
-                rules/skills 约束研发交付、日常工作提效</li
+                ><strong>熟悉：</strong>AI Agent 辅助研发，理解 Agent 原理与架构；熟练使用 Claude /
+                Cursor / Kiro，以 rules/skills 约束交付；熟悉 Dify 工作流搭建</li
               >
-              <li>AI 应用落地：熟悉 Dify 工作流编排与知识库接入（智能客服、内容审核等场景）</li>
             </ul>
           </div>
         </div>
@@ -81,14 +79,17 @@
             </header>
             <span class="field-label">主要工作：</span>
             <ul>
-              <li>主导萤石官方商城、商家后台、创新社区的业务迭代及技术优化</li>
+              <li>负责官方商城小程序、商家后台等核心业务迭代，主导性能优化与工程化改造</li>
+              <li
+                >独立承担 AIGC 视频平台、智能客服、Skill 技能市场、存储卡防伪验真等 0→1
+                项目的前端或全栈交付</li
+              >
             </ul>
             <span class="field-label">主要业绩：</span>
             <ul>
               <li>
                 <strong>业务与性能：</strong
-                >主导官方商城、商家后台、创新社区迭代；单季度小程序冷启动性能提升<span
-                  class="metric"
+                >主导官方商城、商家后台迭代；单季度小程序冷启动性能提升<span class="metric"
                   >40%</span
                 >（3000ms→1800ms）
               </li>
@@ -97,21 +98,10 @@
                 混合打包），实现业务零影响、开发者零感知迁移
               </li>
               <li>
-                <strong>AI 提效：</strong>基于 Dify 开发 AI
-                代码评审助手，对代码改动自动化分析并给出优化建议
+                <strong>AI 提效：</strong>使用 Coding Agent + rules/skills
+                约束研发、自测流程，完成前端 0→1 落地
               </li>
               <li>获评新人之星、2025 年度良好</li>
-            </ul>
-          </li>
-          <li>
-            <header>
-              <h4>自由职业探索</h4>
-              <h4>2024.01-2024.04</h4>
-            </header>
-            <span class="field-label">主要工作：</span>
-            <ul>
-              <li>承接 Web3 DApp 前端外包开发</li>
-              <li>实地调研义乌电商产业，深入了解供应链与运营形态</li>
             </ul>
           </li>
           <li>
@@ -144,7 +134,7 @@
                 <strong>团队文档沉淀：</strong
                 >编写微前端架构下主、子应用从环境配置、开发规范的全流程开发文档，降低新人上手成本；梳理换肤方案及微前端下的应用嵌套方案
               </li>
-              <li>2021 年 P6，2023 年跳级晋升 P7</li>
+              <li>2021 年 P6，2023 年晋升 P7</li>
             </ul>
           </li>
         </ol>
@@ -248,13 +238,13 @@
             <p
               >企业内 AI Agent Skill 技能市场，支持 Skill 发现、ZIP
               发布下载、版本治理与运营审核。技术栈：<span class="tech-stack"
-                >React 19 / React Router 7 / Hono / SQLite / Drizzle / Zod / Bun</span
+                >React 19 / React Router v7 / Hono / SQLite / Drizzle / Zod / Bun</span
               >
             </p>
             <span class="field-label">个人产出：</span>
             <ul>
               <li
-                ><strong>全栈架构：</strong>基于 React Router 7 SSR + Hono API
+                ><strong>全栈架构：</strong>基于 React Router v7 SSR + Hono API
                 同仓实现，覆盖技能浏览、发布、详情、收藏与运营后台全流程</li
               >
               <li
@@ -303,29 +293,6 @@
             </ul>
           </li>
           <li>
-            <h4>创新社区</h4>
-            <span class="field-label">项目描述：</span>
-            <p
-              >萤石内部创新机制平台，推进创新项目落地与员工激励。个人首个<strong
-                >100% AI 交付</strong
-              >项目。技术栈：<span class="tech-stack"
-                >Next.js / React 19 / shadcn / Tailwind CSS / TypeScript</span
-              >
-            </p>
-            <span class="field-label">个人产出：</span>
-            <ul>
-              <li
-                ><strong>AI 全流程交付：</strong
-                >整理产品文档与交互文档，定义明确的项目要求与验收边界，配合 rules、skills
-                约束实现路径，<strong>零手写代码</strong>完成前端从 0 到 1 落地</li
-              >
-              <li
-                ><strong>工程化配套：</strong>沉淀 AI 友好目录约定与规范，使后续迭代可持续由 Agent
-                承接</li
-              >
-            </ul>
-          </li>
-          <li class="project-break">
             <h4>标签平台</h4>
             <span class="field-label">项目描述：</span>
             <p
@@ -346,27 +313,13 @@
         </ol>
       </section>
       <div class="split-line"></div>
-      <section class="skills advantages">
-        <h2>个人优势</h2>
-        <ul>
-          <li
-            >主动承担难点并推动落地：小程序迁移、构建插件、测试工具链等从 0 到 1
-            推进；获评萤石新人之星、2025 年度良好，每日互动跳级晋升 P7</li
-          >
-          <li
-            >理解 Agent 原理与架构，能结合
-            rules/skills、文档约束落地研发流程；围绕业务沉淀组件与工程化工具</li
-          >
-        </ul>
-      </section>
-      <div class="split-line"></div>
       <section class="education">
         <h2>教育经历</h2>
         <p>
           <label
             >浙江大学城市学院 <span class="column-line">|</span> 本科
             <span class="column-line">|</span> 通信工程
-            <span class="column-line">|</span> CET-6（基础口语交流）</label
+            <span class="column-line">|</span> CET-6（能够进行基础口语交流）</label
           >
           <label>2017.09 - 2021.06</label>
         </p>
@@ -427,7 +380,13 @@ const handlePrint = () => {
   }
 
   :deep(article) {
-    padding: 1.2cm 2cm;
+    --resume-name: 24px;
+    --resume-section: 15px;
+    --resume-title: 13px;
+    --resume-body: 12px;
+    --resume-secondary: 11px;
+    padding: 0.75cm 1.4cm;
+    line-height: 1.38;
     box-shadow: none;
   }
 
@@ -436,9 +395,24 @@ const handlePrint = () => {
     color: #3c3c43;
   }
 
-  .page2 {
-    page-break-before: always;
-    margin-top: 30px;
+  :deep(h2) {
+    margin: 4px 0 3px;
+  }
+
+  :deep(section) {
+    margin: 2px 0;
+  }
+
+  :deep(.split-line) {
+    margin: 4px 0;
+  }
+
+  :deep(li) {
+    margin: 2px 0;
+  }
+
+  :deep(.projects > ol > li) {
+    padding: 4px 0 6px;
   }
 
   .hidden-when-print {

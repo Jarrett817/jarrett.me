@@ -2,8 +2,8 @@
   .skills-columns {
     display: flex;
     flex-direction: row;
-    gap: 24px;
-    margin-top: 6px;
+    gap: 16px;
+    margin-top: 4px;
   }
 
   .skills-group {
@@ -14,15 +14,11 @@
     font-size: var(--resume-body);
     font-weight: 600;
     color: #374151;
-    margin: 0 0 6px;
+    margin: 0 0 4px;
   }
 
   ul li {
-    line-height: 1.48;
-    margin: 4px 0;
+    line-height: 1.4;
+    margin: 2px 0;
   }
-}
-
-.advantages ul li {
-  line-height: 1.48;
 }

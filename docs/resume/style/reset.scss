@@ -1,24 +1,24 @@
 @use '../../.vitepress/theme/style/function.scss' as *;
 
 article {
-  --resume-name: 28px;
-  --resume-section: 17px;
-  --resume-title: 15px;
-  --resume-body: 14px;
-  --resume-secondary: 13px;
-  --resume-caption: 12px;
+  --resume-name: 26px;
+  --resume-section: 16px;
+  --resume-title: 14px;
+  --resume-body: 13px;
+  --resume-secondary: 12px;
+  --resume-caption: 11px;
 
   width: 21cm;
   min-height: 29.7cm;
   background: white;
   margin: 0 auto;
   overflow: auto;
-  padding: 1.1em 2.6em 1.4em;
+  padding: 0.95em 2em 1.1em;
   height: 100%;
   color: #3c3c43;
 
   transition: color 0.5s, background-color 0.5s;
-  line-height: 1.52;
+  line-height: 1.42;
   font-size: var(--resume-body);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -45,7 +45,7 @@ article {
     font-size: var(--resume-secondary);
     font-weight: 600;
     color: #4b5563;
-    margin: 6px 0 2px;
+    margin: 4px 0 1px;
   }
 
   .tech-stack {
@@ -82,8 +82,8 @@ h6 {
 h2 {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 10px 0 8px;
+  gap: 6px;
+  margin: 6px 0 5px;
   font-size: var(--resume-section);
   letter-spacing: 0.02em;
 
@@ -139,20 +139,20 @@ a {
 }
 
 li {
-  margin: 5px 0;
+  margin: 3px 0;
   overflow-wrap: break-word;
   white-space: break-spaces;
 }
 
 section {
-  margin: 6px 0;
+  margin: 4px 0;
 }
 
 .split-line {
   width: 100%;
   background: #e5e7eb;
   height: 1px;
-  margin: 8px 0;
+  margin: 5px 0;
 }
 
 .prominent {
