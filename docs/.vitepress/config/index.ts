@@ -35,10 +35,11 @@ export default defineConfig({
   themeConfig,
   vite: {
     optimizeDeps: {
+      include: ['vueuc'],
       exclude: ['naive-ui', 'highlight.js', 'reveal.js']
     },
     ssr: {
-      noExternal: ['naive-ui', 'monaco-editor', 'reveal.js']
+      noExternal: ['naive-ui', 'vueuc', '@css-render/vue3-ssr', 'monaco-editor', 'reveal.js']
     },
     plugins: [
       Components({
