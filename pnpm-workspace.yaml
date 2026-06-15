@@ -1,4 +1,0 @@
-packages:
-  # 所有在 packages 子目录下的 package
-  - 'docs/.vitepress/packages/**'
-  - '!docs/.vitepress/packages/**/node_modules/**'
