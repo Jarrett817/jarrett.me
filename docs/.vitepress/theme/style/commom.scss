@@ -52,3 +52,22 @@
     background-color: var(--blue-atoll);
   }
 }
+
+.vp-doc .reveal-slides-source {
+  > section {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--vp-c-divider);
+
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+  }
+
+  section > section + section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--vp-c-divider);
+  }
+}

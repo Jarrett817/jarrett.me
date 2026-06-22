@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DefaultTheme from 'vitepress/theme';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, provide } from 'vue';
+import { slidesVisibleKey } from '../slides-context';
 import { darkTheme, lightTheme } from 'naive-ui';
 import { Maximize, PlayOutline } from '@vicons/carbon';
 import { defineClientComponent, useData } from 'vitepress';
@@ -15,6 +16,8 @@ const data = useData();
 
 const { Layout } = DefaultTheme;
 const slidesVisible = ref(false);
+
+provide(slidesVisibleKey, slidesVisible);
 
 const theme = ref<'dark' | 'light'>('light');
 const APPEARANCE_KEY = 'vitepress-theme-appearance';
@@ -71,7 +74,11 @@ const openFullScreenMode = () => {
     </ClientOnly> -->
 
     <Plum
-      v-if="frontmatter.value?.layout && !['home', 'page'].includes(frontmatter.value.layout)"
+      v-if="
+        frontmatter.value?.layout &&
+        !['home', 'page'].includes(frontmatter.value.layout) &&
+        !slidesVisible
+      "
     />
 
     <Layout v-show="!slidesVisible">

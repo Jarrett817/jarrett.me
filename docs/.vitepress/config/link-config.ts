@@ -34,6 +34,7 @@ const FrontEndSidebar = [
   { text: '小程序', link: '/front-end/miniprogram/' },
   { text: 'AI', link: '/ai/' },
   { text: '无处不在的Agent', link: '/ai-robot/' },
+  { text: 'Agent 的上下文管理', link: '/front-end/agent-context/' },
   {
     text: 'quill',
     link: '/front-end/quill/'

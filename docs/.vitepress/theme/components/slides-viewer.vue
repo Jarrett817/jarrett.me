@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { nextTick, ref, shallowRef, watch } from 'vue';
-import { useRoute, withBase } from 'vitepress';
+import { nextTick, onBeforeUnmount, ref, shallowRef, watch, type Component } from 'vue';
+import { useRoute } from 'vitepress';
 import { data as markdownData } from '../../data/markdown.data';
 import { base } from '../../shared/index';
 import { resolveSlideMarkdownImages } from '../slideImageUrls';
+import { getInteractiveDeckLoader } from '../interactive-slides';
 import { Close } from '@vicons/carbon';
 import type Revealjs from 'reveal.js';
 import { type Api } from 'reveal.js';
 import type Markdownjs from 'reveal.js/plugin/markdown/markdown.esm.js';
 import type Highlightjs from 'reveal.js/plugin/highlight/highlight.esm.js';
+import 'reveal.js/dist/reveal.css';
 
 interface Props {
   visible: boolean;
@@ -20,149 +22,144 @@ const emit = defineEmits<{
 }>();
 
 const route = useRoute();
-const containerRef = ref<HTMLElement | null>(null);
-const revealRef = ref<HTMLElement | null>(null);
-const themeContainerRef = ref<HTMLElement | null>(null);
-const currentTheme = ref('black');
-const markdownContent = ref('');
+/** 对应 React 示例里的 deckDivRef */
+const deckDivRef = ref<HTMLElement | null>(null);
+const deckComponent = shallowRef<Component | null>(null);
 
-// 缩放：持久化到 localStorage
-const ZOOM_STORAGE_KEY = 'reveal-slides-zoom';
 const ZOOM_MIN = 0.6;
 const ZOOM_MAX = 1.4;
 const ZOOM_STEP = 0.1;
-
 const zoomScale = ref(1);
 
-const loadZoom = () => {
-  if (typeof window === 'undefined') return;
-  const saved = localStorage.getItem(ZOOM_STORAGE_KEY);
-  if (saved != null) {
-    const v = parseFloat(saved);
-    if (!Number.isNaN(v) && v >= ZOOM_MIN && v <= ZOOM_MAX) zoomScale.value = v;
-  }
-};
+const revealInstance = shallowRef<Api | null>(null);
+const RevealCtor = shallowRef<typeof Revealjs | null>(null);
+const Markdown = shallowRef<typeof Markdownjs | null>(null);
+const Highlight = shallowRef<typeof Highlightjs | null>(null);
 
-const saveZoom = () => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(ZOOM_STORAGE_KEY, String(zoomScale.value));
-};
+let useVueMode = false;
 
 const zoomIn = () => {
   zoomScale.value = Math.min(ZOOM_MAX, zoomScale.value + ZOOM_STEP);
-  saveZoom();
 };
 
 const zoomOut = () => {
   zoomScale.value = Math.max(ZOOM_MIN, zoomScale.value - ZOOM_STEP);
-  saveZoom();
 };
 
-// Reveal.js 相关类型和实例（仅在客户端使用）
-// 使用 shallowRef 因为不需要深度响应式，只需要引用
-const revealInstance = shallowRef<Api | null>(null);
-const Reveal = shallowRef<typeof Revealjs | null>(null);
-const Markdown = shallowRef<typeof Markdownjs | null>(null);
-const Highlight = shallowRef<typeof Highlightjs | null>(null);
-
-// 当前加载的主题（CSS模块由Vite自动管理）
-
-// Reveal.js 主题列表（与 themeCSSModules 保持一致）
-const themes: Array<{ label: string; value: string }> = [
-  { label: '米色 (Beige)', value: 'beige' },
-  { label: '黑色 (Black)', value: 'black' },
-  { label: '黑色高对比 (Black Contrast)', value: 'black-contrast' },
-  { label: '血液 (Blood)', value: 'blood' },
-  { label: 'Dracula', value: 'dracula' },
-  { label: '联盟 (League)', value: 'league' },
-  { label: '月亮 (Moon)', value: 'moon' },
-  { label: '夜晚 (Night)', value: 'night' },
-  { label: '衬线 (Serif)', value: 'serif' },
-  { label: '简约 (Simple)', value: 'simple' },
-  { label: '天空 (Sky)', value: 'sky' },
-  { label: 'Solarized', value: 'solarized' },
-  { label: '白色 (White)', value: 'white' },
-  { label: '白色高对比 (White Contrast)', value: 'white-contrast' },
-  {
-    label: '白色高对比紧凑 (White Contrast Compact)',
-    value: 'white-contrast-compact-verbatim-headers'
-  }
-];
-
-// 切换主题 - 只更新当前主题状态
-const loadTheme = (themeName: string) => {
-  // 保存到 localStorage
-  localStorage.setItem('reveal-theme', themeName);
-  currentTheme.value = themeName;
+const toDocKey = (path: string): string => {
+  const stripped = path.startsWith(base) ? path.slice(base.length) : path;
+  return (
+    stripped
+      .replace(/^\/+/, '')
+      .replace(/\.html$/, '')
+      .replace(/\/$/, '') || 'index'
+  );
 };
 
-// 初始化主题与缩放
-const initTheme = () => {
-  if (typeof window === 'undefined') return;
-  const savedTheme = localStorage.getItem('reveal-theme') || 'black';
-  loadTheme(savedTheme);
-  loadZoom();
+const toPageUrlPath = (path: string): string => {
+  const key = toDocKey(path);
+  return key === 'index' ? '/' : `/${key}`;
 };
-// 从构建时加载的数据中获取当前页面的原始 Markdown（与用于图片解析的 url 一致）
+
 const getPageMarkdownAndUrl = (): { src: string; pageUrlPath: string } => {
-  const pageUrlPath = route.path.replace(base, '') || '/index';
-  const page = markdownData.find(item => item.url === pageUrlPath);
-  return { src: page?.src || '', pageUrlPath };
+  const pageKey = toDocKey(route.path);
+  const page = markdownData.find(item => toDocKey(item.url) === pageKey);
+  return { src: page?.src || '', pageUrlPath: toPageUrlPath(route.path) };
 };
 
-// 初始化 Reveal.js
-const init = async () => {
-  // 仅在客户端执行
-  if (typeof window === 'undefined') return;
-  if (!containerRef.value || !revealRef.value) return;
+const mountMarkdownSlides = (slidesEl: HTMLElement, content: string) => {
+  slidesEl.innerHTML = '';
+  const section = document.createElement('section');
+  section.setAttribute('data-markdown', '');
+  section.setAttribute('data-separator-vertical', '^\\r?\\n--\\r?\\n$');
+  const textarea = document.createElement('textarea');
+  textarea.setAttribute('data-template', '');
+  textarea.textContent = content;
+  section.appendChild(textarea);
+  slidesEl.appendChild(section);
+};
 
-  // 动态导入 reveal.js 及其插件（仅在客户端）
-  if (!Reveal.value) {
-    try {
-      const revealModule = await import('reveal.js');
-      Reveal.value = revealModule.default || revealModule;
+const loadRevealModules = async () => {
+  if (RevealCtor.value) return true;
 
-      const markdownModule = await import('reveal.js/plugin/markdown/markdown.esm.js');
-      Markdown.value = markdownModule.default || markdownModule;
+  try {
+    const revealModule = await import('reveal.js');
+    RevealCtor.value = revealModule.default || revealModule;
 
-      const highlightModule = await import('reveal.js/plugin/highlight/highlight.esm.js');
-      Highlight.value = highlightModule.default || highlightModule;
-    } catch (error) {
-      console.error('Failed to load reveal.js:', error);
-      return;
-    }
+    const markdownModule = await import('reveal.js/plugin/markdown/markdown.esm.js');
+    Markdown.value = markdownModule.default || markdownModule;
+
+    const highlightModule = await import('reveal.js/plugin/highlight/highlight.esm.js');
+    Highlight.value = highlightModule.default || highlightModule;
+    return true;
+  } catch (error) {
+    console.error('Failed to load reveal.js:', error);
+    return false;
   }
+};
 
-  // 清理之前的实例
-  if (revealInstance.value) {
-    try {
-      revealInstance.value.destroy();
-    } catch (e) {
-      // 忽略销毁错误
-    }
-    revealInstance.value = null;
+/** Vue 组件 deck：先渲染 <section>，再 initialize（同 React useEffect） */
+const prepareVueDeck = async () => {
+  const pageKey = toDocKey(route.path);
+  const deckLoader = getInteractiveDeckLoader(pageKey);
+  if (!deckLoader) return false;
+
+  deckComponent.value = null;
+  await nextTick();
+
+  const mod = await deckLoader();
+  deckComponent.value = mod.default;
+
+  // 等 Vue 把 <section> 写进 .slides
+  await nextTick();
+  await nextTick();
+
+  const slidesEl = deckDivRef.value?.querySelector('.slides');
+  if (!slidesEl?.querySelector('section')) {
+    console.warn('Slide sections not ready before Reveal init');
+    return false;
   }
+  return true;
+};
+
+const prepareMarkdownDeck = () => {
+  deckComponent.value = null;
+  const slidesEl = deckDivRef.value?.querySelector('.slides');
+  if (!slidesEl) return false;
 
   const { src: pageMarkdown, pageUrlPath } = getPageMarkdownAndUrl();
-  if (pageMarkdown) {
-    markdownContent.value = resolveSlideMarkdownImages({ markdown: pageMarkdown, pageUrlPath });
-  } else {
+  if (!pageMarkdown) {
     console.warn('No markdown content found for current page');
-    return;
+    return false;
   }
 
-  // 等待 DOM 更新
+  mountMarkdownSlides(
+    slidesEl,
+    resolveSlideMarkdownImages({ markdown: pageMarkdown, pageUrlPath })
+  );
+  return true;
+};
+
+const initReveal = async () => {
+  if (typeof window === 'undefined') return;
+  if (!deckDivRef.value) return;
+  if (revealInstance.value) return;
+
+  if (!(await loadRevealModules())) return;
+
+  const pageKey = toDocKey(route.path);
+  useVueMode = !!getInteractiveDeckLoader(pageKey);
+
+  const ready = useVueMode ? await prepareVueDeck() : prepareMarkdownDeck();
+  if (!ready) return;
+
+  zoomScale.value = 1;
   await nextTick();
 
-  // 初始化主题（必须在初始化 Reveal.js 之前）
-  initTheme();
+  const plugins = useVueMode ? [Highlight.value!] : [Markdown.value!, Highlight.value!];
 
-  // 再次等待，确保主题类已应用
-  await nextTick();
-
-  // 初始化 Reveal.js - 使用正确的 API
-  revealInstance.value = new Reveal.value(revealRef.value, {
-    plugins: [Markdown.value!, Highlight.value!],
+  revealInstance.value = new RevealCtor.value!(deckDivRef.value, {
+    plugins,
     hash: true,
     controls: true,
     progress: true,
@@ -176,105 +173,86 @@ const init = async () => {
     fragmentInURL: true,
     help: true,
     hideInactiveCursor: true,
-    markdown: {
-      smartypants: true
-    },
-    highlight: {
-      highlightOnLoad: true
-    }
+    markdown: { smartypants: true },
+    highlight: { highlightOnLoad: true }
   });
 
   try {
-    await revealInstance.value?.initialize();
-    // 初始化后再次确保主题正确
-    if (revealRef.value) {
-      loadTheme(currentTheme.value);
-    }
+    await revealInstance.value.initialize();
+    revealInstance.value.sync();
+    revealInstance.value.layout();
   } catch (error) {
     console.error('Failed to initialize Reveal.js:', error);
   }
 };
 
-// 关闭幻灯片
-const closeSlides = () => {
+const destroyReveal = () => {
   if (revealInstance.value) {
     try {
       revealInstance.value.destroy();
-    } catch (e) {
-      // 忽略销毁错误
+    } catch {
+      // ignore
     }
     revealInstance.value = null;
   }
 
+  deckComponent.value = null;
+
+  if (!useVueMode) {
+    const slidesEl = deckDivRef.value?.querySelector('.slides');
+    if (slidesEl) slidesEl.innerHTML = '';
+  }
+};
+
+const requestClose = () => {
   emit('close');
 };
 
-// 监听 visible 变化
 watch(
   () => props.visible,
-  async newVal => {
-    if (newVal) {
+  async visible => {
+    if (visible) {
       await nextTick();
-      await init();
+      await initReveal();
     } else {
-      closeSlides();
+      destroyReveal();
     }
   }
 );
+
+onBeforeUnmount(() => {
+  destroyReveal();
+});
 </script>
 
 <template>
-  <!-- 预加载所有主题的 CSS -->
-  <Teleport to="head">
-    <template v-for="theme in themes" :key="theme.value">
-      <link
-        v-if="currentTheme === theme.value"
-        rel="stylesheet"
-        :href="withBase(`/revealjs-theme/${theme.value}.css`)"
-        :data-reveal-theme="theme.value"
-      />
-    </template>
-  </Teleport>
   <Teleport to="body">
     <div
       v-if="visible"
-      ref="containerRef"
-      :class="`theme-${currentTheme} reveal-container w-screen h-screen`"
+      class="reveal-presentation reveal-container w-screen h-screen"
+      :style="{ transform: `scale(${zoomScale})`, transformOrigin: 'center center' }"
     >
-      <div ref="revealRef" class="reveal">
-        <!-- 缩放只作用在包裹层，不能写 .slides 的 transform，否则会覆盖 Reveal 的定位 transform，内容会挤到右下角 -->
-        <div class="reveal-zoom-wrapper" :style="{ transform: `scale(${zoomScale})` }">
-          <div class="slides">
-            <section data-markdown data-separator-vertical="^\r?\n--\r?\n$">
-              <textarea data-template>{{ markdownContent }}</textarea>
-            </section>
-          </div>
+      <!-- 结构与 React 官方示例一致：.reveal > .slides > section -->
+      <div ref="deckDivRef" class="reveal reveal-interactive-deck">
+        <div class="slides">
+          <component :is="deckComponent" v-if="deckComponent" />
         </div>
       </div>
     </div>
-    <!-- 主题切换区域（左上角，鼠标悬停显示） -->
+
     <div
       v-if="visible"
-      ref="themeContainerRef"
-      class="absolute top-0 left-0 shadow-sm w-full h-15 z-[10001] flex justify-between p-4 opacity-0 hover:opacity-100 transition-all duration-300"
+      class="slides-toolbar absolute top-0 left-0 w-full z-[10001] flex justify-between items-center px-4 py-3 opacity-0 hover:opacity-100 transition-opacity duration-300"
     >
       <div class="flex items-center gap-2">
-        <n-select
-          v-if="themeContainerRef"
-          v-model="currentTheme"
-          :options="themes"
-          placeholder="选择主题"
-          size="small"
-          :to="themeContainerRef"
-          class="w-[200px]"
-          @update:value="loadTheme"
-        />
-        <span class="text-sm text-gray-500">缩放</span>
+        <span class="text-sm text-slate-600">缩放</span>
         <n-button size="small" :disabled="zoomScale <= ZOOM_MIN" @click="zoomOut"> − </n-button>
-        <span class="min-w-[3rem] text-center text-sm">{{ Math.round(zoomScale * 100) }}%</span>
+        <span class="min-w-[3rem] text-center text-sm text-slate-700">{{
+          Math.round(zoomScale * 100)
+        }}%</span>
         <n-button size="small" :disabled="zoomScale >= ZOOM_MAX" @click="zoomIn"> + </n-button>
       </div>
-      <n-button circle @click="closeSlides">
+      <n-button circle @click="requestClose">
         <template #icon>
           <n-icon><Close /></n-icon>
         </template>
@@ -284,54 +262,32 @@ watch(
 </template>
 
 <style lang="scss">
-@import 'reveal.js/dist/reveal.css';
-@import 'reveal.js/plugin/highlight/zenburn.css';
+@use '../style/reveal-presentation.scss';
 </style>
 
 <style lang="scss" scoped>
-/* Reveal.js 容器样式 */
 .reveal-container {
   overflow: hidden;
   position: relative;
+  z-index: 10000;
 }
 
-/* Reveal.js 样式 */
+.slides-toolbar {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.slides-toolbar > * {
+  pointer-events: auto;
+}
+
 :deep(.reveal) {
   width: 100%;
   height: 100%;
-  position: relative;
 }
 
-/* 仅缩放幻灯片区域；.slides 的 transform 由 Reveal 自己管理，不可覆盖 */
-:deep(.reveal .reveal-zoom-wrapper) {
-  position: absolute;
-  inset: 0;
+:deep(.reveal .slides) {
   width: 100%;
   height: 100%;
-  transform-origin: center center;
-}
-
-:deep(.reveal .reveal-zoom-wrapper .slides) {
-  width: 100%;
-  height: 100%;
-}
-
-/* 长竖图单独一页：限制可视高度，内部滚动，避免撑破幻灯片 */
-:deep(.reveal-long-image-scroll) {
-  max-height: 72vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  margin: 0 auto;
-  padding: 0 0.25rem;
-  box-sizing: border-box;
-  -webkit-overflow-scrolling: touch;
-  text-align: center;
-}
-
-:deep(.reveal-long-image-scroll img) {
-  max-width: 100%;
-  height: auto;
-  vertical-align: top;
-  display: inline-block;
 }
 </style>
