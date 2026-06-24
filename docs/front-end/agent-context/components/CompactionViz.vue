@@ -5,23 +5,23 @@
         class="flex min-w-0 items-center justify-center bg-gradient-to-r from-[#6b8fd4] to-[#3e66ae] text-xs font-semibold text-white transition-[width] duration-300"
         :style="{ width: summaryPct + '%' }"
       >
-        <span>摘要</span>
+        <span>摘要 ~{{ summaryK }}k</span>
       </div>
       <div
         class="flex min-w-0 items-center justify-center bg-gradient-to-r from-[#5cb88a] to-[#2d8a5e] text-xs font-semibold text-white transition-[width] duration-300"
         :style="{ width: recentPct + '%' }"
       >
-        <span>原文</span>
+        <span>原文 ~{{ keep }}k</span>
       </div>
       <div
         class="flex min-w-0 items-center justify-center bg-gradient-to-r from-[#f0b429] to-[#e08b12] text-xs font-semibold text-gray-800 transition-[width] duration-300"
         :style="{ width: reservePct + '%' }"
       >
-        <span>预留</span>
+        <span>预留 {{ reserveK }}k</span>
       </div>
     </div>
     <label class="mt-3 flex items-center gap-3 text-[0.8rem] text-gray-700">
-      <span>keepRecent ≈ {{ keep }}k</span>
+      <span>keepRecent ≈ {{ keep }}k tokens</span>
       <input
         v-model.number="keep"
         type="range"
@@ -31,6 +31,10 @@
         class="min-w-0 flex-1 accent-[#3e66ae]"
       />
     </label>
+    <p class="mt-2 text-[0.72rem] text-gray-500">
+      窗口 {{ windowK }}k · 触发：已用 tokens &gt; {{ windowK }}k − {{ reserveK }}k =
+      <strong>{{ windowK - reserveK }}k</strong>
+    </p>
   </div>
 </template>
 
@@ -41,9 +45,8 @@ const keep = ref(20);
 const windowK = 128;
 const reserveK = 16;
 
-const summaryPct = computed(() =>
-  Math.max(8, ((windowK - keep.value - reserveK) / windowK) * 100)
-);
+const summaryK = computed(() => windowK - keep.value - reserveK);
+const summaryPct = computed(() => Math.max(8, ((windowK - keep.value - reserveK) / windowK) * 100));
 const recentPct = computed(() => (keep.value / windowK) * 100);
 const reservePct = computed(() => (reserveK / windowK) * 100);
 </script>
