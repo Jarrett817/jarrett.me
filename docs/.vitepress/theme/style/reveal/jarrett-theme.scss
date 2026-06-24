@@ -1,0 +1,169 @@
+/**
+ * Jarrett 汇报主题：白底、中性色、正文偏技术表述
+ */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap');
+
+@import 'reveal.js/dist/reveal.css';
+@import 'reveal.js/dist/theme/white.css';
+
+.reveal-presentation {
+  --r-background-color: #ffffff;
+  --r-main-color: #1f2937;
+  --r-main-font-size: 34px;
+  --r-main-font: 'DM Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --r-heading-font: 'DM Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --r-heading-color: #111827;
+  --r-heading-text-transform: none;
+  --r-heading-letter-spacing: -0.02em;
+  --r-heading-font-weight: 600;
+  --r-heading1-size: 2.1em;
+  --r-heading2-size: 1.5em;
+  --r-heading3-size: 1.2em;
+  --r-heading4-size: 1.02em;
+  --r-link-color: #2563eb;
+  --r-link-color-dark: #1d4ed8;
+  --r-link-color-hover: #3b82f6;
+  --r-selection-background-color: rgba(37, 99, 235, 0.2);
+  --r-selection-color: #111827;
+  --deck-accent: #374151;
+  --deck-accent-soft: #f3f4f6;
+  --deck-border: #e5e7eb;
+}
+
+.reveal-presentation.reveal-container {
+  background: #ffffff;
+}
+
+/* 幻灯片容器：整体左对齐（覆盖 reveal 默认 center） */
+.reveal-presentation .reveal .slides {
+  text-align: left;
+}
+
+/* 内容页：垂直居中 + 水平左对齐 */
+.reveal-presentation .reveal.center .slides > section.present {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0 1.25em;
+  text-align: left;
+}
+
+.reveal-presentation .reveal.center .slides > section.present > * {
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+.reveal-presentation .reveal.center .slides > section.present.deck-cover,
+.reveal-presentation .reveal.center .slides > section.present.deck-part-divider {
+  align-items: center;
+  text-align: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.reveal-presentation .reveal.center .slides > section.present.deck-cover > *,
+.reveal-presentation .reveal.center .slides > section.present.deck-part-divider > * {
+  align-self: center;
+}
+
+.reveal-presentation .reveal .slides section,
+.reveal-presentation .reveal .slides section > section {
+  text-align: left;
+}
+
+.reveal-presentation .reveal .slides > section.deck-cover {
+  text-align: center;
+}
+
+.reveal-presentation .reveal .slides > section.deck-cover h1 {
+  margin-bottom: 0.4em;
+  color: #111827;
+}
+
+.reveal-presentation .reveal .slides > section.deck-cover blockquote {
+  margin: 0 auto;
+  max-width: 22em;
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  font-size: 0.55em;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.reveal-presentation .reveal .slides > section.deck-cover blockquote p {
+  margin: 0;
+}
+
+/* 分区扉页 */
+.reveal-presentation .reveal .slides > section.deck-part-divider {
+  text-align: center;
+}
+
+.reveal-presentation .reveal h3 {
+  margin-bottom: 0.4em;
+  line-height: 1.25;
+  color: #111827;
+}
+
+.reveal-presentation .reveal code {
+  padding: 0.06em 0.3em;
+  border-radius: 0.25em;
+  background: #f3f4f6;
+  font-size: 0.9em;
+  color: #1f2937;
+}
+
+.reveal-presentation .reveal .progress {
+  height: 3px;
+  color: #9ca3af;
+}
+
+.reveal-presentation .reveal .controls button {
+  color: #6b7280;
+}
+
+.reveal-presentation .reveal .slide-number {
+  font-size: 14px;
+  color: #9ca3af;
+  background: transparent;
+}
+
+.reveal-presentation .reveal .slides section .fragment {
+  transition: opacity 0.35s ease;
+}
+
+.reveal-presentation .reveal .slides section .fragment:not(.visible) {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-presentation .reveal .slides section .fragment {
+    transition: opacity 0.15s ease;
+  }
+}
+
+.reveal-presentation .reveal.reveal-vue-deck .slides,
+.reveal-presentation .reveal.reveal-vue-deck .slides > section,
+.reveal-presentation .reveal.reveal-vue-deck .slides > section > section,
+.reveal-presentation .reveal .slides > section.present,
+.reveal-presentation .reveal .slides > section > section.present {
+  pointer-events: auto;
+}
+
+.reveal-presentation .reveal [data-reveal-interactive] {
+  max-width: 100%;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.reveal-presentation .reveal [data-reveal-interactive] button,
+.reveal-presentation .reveal [data-reveal-interactive] input {
+  cursor: pointer;
+}
