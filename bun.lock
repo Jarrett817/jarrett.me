@@ -17,7 +17,6 @@
         "vue": "^3.5.30",
       },
       "devDependencies": {
-        "@anthropic-ai/claude-code": "^2.1.186",
         "@earendil-works/pi-coding-agent": "^0.79.9",
         "@types/node": "^18.19.130",
         "@types/reveal.js": "^5.2.2",
@@ -43,24 +42,6 @@
     "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "https://registry.npmmirror.com/@alloc/quick-lru/-/quick-lru-5.2.0.tgz", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],
 
     "@antfu/utils": ["@antfu/utils@0.7.10", "https://registry.npmmirror.com/@antfu/utils/-/utils-0.7.10.tgz", {}, "sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww=="],
-
-    "@anthropic-ai/claude-code": ["@anthropic-ai/claude-code@2.1.186", "https://registry.npmmirror.com/@anthropic-ai/claude-code/-/claude-code-2.1.186.tgz", { "optionalDependencies": { "@anthropic-ai/claude-code-darwin-arm64": "2.1.186", "@anthropic-ai/claude-code-darwin-x64": "2.1.186", "@anthropic-ai/claude-code-linux-arm64": "2.1.186", "@anthropic-ai/claude-code-linux-arm64-musl": "2.1.186", "@anthropic-ai/claude-code-linux-x64": "2.1.186", "@anthropic-ai/claude-code-linux-x64-musl": "2.1.186", "@anthropic-ai/claude-code-win32-arm64": "2.1.186", "@anthropic-ai/claude-code-win32-x64": "2.1.186" }, "bin": { "claude": "bin/claude.exe" } }, "sha512-UGJEvTzq3gOWNW9NIKzNamjebOzKQ/fZwiMI6HR+cuRaqCizmCnq6JjITuF9eAwwkQrKIoBHYoYEYb1fIk/Ezw=="],
-
-    "@anthropic-ai/claude-code-darwin-arm64": ["@anthropic-ai/claude-code-darwin-arm64@2.1.186", "https://registry.npmmirror.com/@anthropic-ai/claude-code-darwin-arm64/-/claude-code-darwin-arm64-2.1.186.tgz", { "os": "darwin", "cpu": "arm64" }, "sha512-Ntv78PmtrnYBfawHDrgU6LK/6agzTrUUu7IXSlX9Bu0swk7LQ7T1SKHQVXsS9ur3D3yQ45cKcX4Kg8b+iYb+lQ=="],
-
-    "@anthropic-ai/claude-code-darwin-x64": ["@anthropic-ai/claude-code-darwin-x64@2.1.186", "https://registry.npmmirror.com/@anthropic-ai/claude-code-darwin-x64/-/claude-code-darwin-x64-2.1.186.tgz", { "os": "darwin", "cpu": "x64" }, "sha512-Q/loj5/G5SIvGG6so36AsSMV0CkWC0amgxiCW1liWSnmauvE6iP/6I6QtSevcKxcpahXqMwWoRYS5pWIPXUIaQ=="],
-
-    "@anthropic-ai/claude-code-linux-arm64": ["@anthropic-ai/claude-code-linux-arm64@2.1.186", "https://registry.npmmirror.com/@anthropic-ai/claude-code-linux-arm64/-/claude-code-linux-arm64-2.1.186.tgz", { "os": "linux", "cpu": "arm64" }, "sha512-+O4cgs/Jmloy/gRx9Y/x8DG+whDSLCww2riwOYNM8FSl7J0gF0ecCU/7Wo6LdCjKYW8Jyy3g1FPP1xtln5Rj1w=="],
-
-    "@anthropic-ai/claude-code-linux-arm64-musl": ["@anthropic-ai/claude-code-linux-arm64-musl@2.1.186", "https://registry.npmmirror.com/@anthropic-ai/claude-code-linux-arm64-musl/-/claude-code-linux-arm64-musl-2.1.186.tgz", { "os": "linux", "cpu": "arm64" }, "sha512-uZrKFrKdMRpcpM/8+bfiAE1gQ+xy4KXMAf85ZVtNYkQMj52JEMpGvdvZXNiSw+gNgM4o46VD3sCFGL3g4Edupg=="],
-
-    "@anthropic-ai/claude-code-linux-x64": ["@anthropic-ai/claude-code-linux-x64@2.1.186", "https://registry.npmmirror.com/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-2.1.186.tgz", { "os": "linux", "cpu": "x64" }, "sha512-qXncNDTDIjwZ5ZxoQ7t4TfsFCBiWuU5/7PwM9qsGNhgscA3vDztD8OWD6/lxKM3XYcm5ct2J+Wa/k+pMzxxmDA=="],
-
-    "@anthropic-ai/claude-code-linux-x64-musl": ["@anthropic-ai/claude-code-linux-x64-musl@2.1.186", "https://registry.npmmirror.com/@anthropic-ai/claude-code-linux-x64-musl/-/claude-code-linux-x64-musl-2.1.186.tgz", { "os": "linux", "cpu": "x64" }, "sha512-MNfz1+LHosNXa9kdtCHT+GLg9nTWuZ6LxT2OGKXdX6OK5C9fgX1aA67bKfp9aMrwcI6Oh72oETlN7uQS8LXCnw=="],
-
-    "@anthropic-ai/claude-code-win32-arm64": ["@anthropic-ai/claude-code-win32-arm64@2.1.186", "https://registry.npmmirror.com/@anthropic-ai/claude-code-win32-arm64/-/claude-code-win32-arm64-2.1.186.tgz", { "os": "win32", "cpu": "arm64" }, "sha512-Lg2vIFeWSM/a8rHN2E/mmW+a1ybwDi7saHgVCUWf3ru/gH1alGBjfKrbScMUtnKsCAvBBhjFc9960FEGdUWJUA=="],
-
-    "@anthropic-ai/claude-code-win32-x64": ["@anthropic-ai/claude-code-win32-x64@2.1.186", "https://registry.npmmirror.com/@anthropic-ai/claude-code-win32-x64/-/claude-code-win32-x64-2.1.186.tgz", { "os": "win32", "cpu": "x64" }, "sha512-vpBm0cJzc8Z6D+kytByspmJWB/fisT3PJLf+TUc6D4rajf2axJmiDEDXWbdVdvWoUMQ82tNoW4uonVuQENGpQQ=="],
 
     "@anthropic-ai/sdk": ["@anthropic-ai/sdk@0.91.1", "https://registry.npmmirror.com/@anthropic-ai/sdk/-/sdk-0.91.1.tgz", { "dependencies": { "json-schema-to-ts": "^3.1.1" }, "peerDependencies": { "zod": "^3.25.0 || ^4.0.0" }, "optionalPeers": ["zod"], "bin": { "anthropic-ai-sdk": "bin/cli" } }, "sha512-LAmu761tSN9r66ixvmciswUj/ZC+1Q4iAfpedTfSVLeswRwnY3n2Nb6Tsk+cLPP28aLOPWeMgIuTuCcMC6W/iw=="],
 

@@ -5,9 +5,10 @@ import { slidesVisibleKey } from '../slides-context';
 import { darkTheme, lightTheme } from 'naive-ui';
 import { Maximize, PlayOutline } from '@vicons/carbon';
 import { defineClientComponent, useData } from 'vitepress';
+import Plum from './Plum/index.vue';
+import TimeTree from './TimeTree/index.vue';
 
-const Plum = defineClientComponent(() => import('./Plum/index.vue'));
-const TimeTree = defineClientComponent(() => import('./TimeTree/index.vue'));
+// 懒加载SlidesViewer组件
 const SlidesViewer = defineClientComponent(() => import('./slides-viewer.vue'));
 
 const { frontmatter } = useData();
