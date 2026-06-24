@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref, shallowRef, watch, type Component } from 'vue';
 import { useRoute } from 'vitepress';
+import { data as markdownData } from '../../data/markdown.data';
 import { base } from '../../shared/index';
 import { resolveSlideMarkdownImages } from '../slideImageUrls';
 import { getInteractiveDeckLoader } from '../interactive-slides';
-import { getSlideMarkdownLoader } from '../slide-markdown';
 import { Close } from '@vicons/carbon';
 import type Revealjs from 'reveal.js';
 import { type Api } from 'reveal.js';
 import type Markdownjs from 'reveal.js/plugin/markdown/markdown.esm.js';
 import type Highlightjs from 'reveal.js/plugin/highlight/highlight.esm.js';
+import 'reveal.js/dist/reveal.css';
 
 interface Props {
   visible: boolean;
@@ -25,24 +26,10 @@ const route = useRoute();
 const deckDivRef = ref<HTMLElement | null>(null);
 const deckComponent = shallowRef<Component | null>(null);
 
-const ZOOM_STORAGE_KEY = 'reveal-slides-zoom';
 const ZOOM_MIN = 0.6;
 const ZOOM_MAX = 1.4;
 const ZOOM_STEP = 0.1;
 const zoomScale = ref(1);
-
-const loadZoom = () => {
-  if (typeof window === 'undefined') return;
-  const saved = localStorage.getItem(ZOOM_STORAGE_KEY);
-  if (saved == null) return;
-  const v = parseFloat(saved);
-  if (!Number.isNaN(v) && v >= ZOOM_MIN && v <= ZOOM_MAX) zoomScale.value = v;
-};
-
-const saveZoom = () => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(ZOOM_STORAGE_KEY, String(zoomScale.value));
-};
 
 const revealInstance = shallowRef<Api | null>(null);
 const RevealCtor = shallowRef<typeof Revealjs | null>(null);
@@ -53,12 +40,10 @@ let useVueMode = false;
 
 const zoomIn = () => {
   zoomScale.value = Math.min(ZOOM_MAX, zoomScale.value + ZOOM_STEP);
-  saveZoom();
 };
 
 const zoomOut = () => {
   zoomScale.value = Math.max(ZOOM_MIN, zoomScale.value - ZOOM_STEP);
-  saveZoom();
 };
 
 const toDocKey = (path: string): string => {
@@ -76,12 +61,10 @@ const toPageUrlPath = (path: string): string => {
   return key === 'index' ? '/' : `/${key}`;
 };
 
-const getPageMarkdownAndUrl = async (): Promise<{ src: string; pageUrlPath: string } | null> => {
+const getPageMarkdownAndUrl = (): { src: string; pageUrlPath: string } => {
   const pageKey = toDocKey(route.path);
-  const loader = getSlideMarkdownLoader(pageKey);
-  if (!loader) return null;
-  const mod = await loader();
-  return { src: mod.default, pageUrlPath: toPageUrlPath(route.path) };
+  const page = markdownData.find(item => toDocKey(item.url) === pageKey);
+  return { src: page?.src || '', pageUrlPath: toPageUrlPath(route.path) };
 };
 
 const mountMarkdownSlides = (slidesEl: HTMLElement, content: string) => {
@@ -139,20 +122,20 @@ const prepareVueDeck = async () => {
   return true;
 };
 
-const prepareMarkdownDeck = async () => {
+const prepareMarkdownDeck = () => {
   deckComponent.value = null;
   const slidesEl = deckDivRef.value?.querySelector('.slides');
   if (!slidesEl) return false;
 
-  const page = await getPageMarkdownAndUrl();
-  if (!page?.src) {
-    console.warn('No slide markdown for current page');
+  const { src: pageMarkdown, pageUrlPath } = getPageMarkdownAndUrl();
+  if (!pageMarkdown) {
+    console.warn('No markdown content found for current page');
     return false;
   }
 
   mountMarkdownSlides(
     slidesEl,
-    resolveSlideMarkdownImages({ markdown: page.src, pageUrlPath: page.pageUrlPath })
+    resolveSlideMarkdownImages({ markdown: pageMarkdown, pageUrlPath })
   );
   return true;
 };
@@ -167,10 +150,10 @@ const initReveal = async () => {
   const pageKey = toDocKey(route.path);
   useVueMode = !!getInteractiveDeckLoader(pageKey);
 
-  const ready = useVueMode ? await prepareVueDeck() : await prepareMarkdownDeck();
+  const ready = useVueMode ? await prepareVueDeck() : prepareMarkdownDeck();
   if (!ready) return;
 
-  loadZoom();
+  zoomScale.value = 1;
   await nextTick();
 
   const plugins = useVueMode ? [Highlight.value!] : [Markdown.value!, Highlight.value!];
@@ -181,7 +164,6 @@ const initReveal = async () => {
     controls: true,
     progress: true,
     center: true,
-    fragments: true,
     touch: true,
     keyboard: true,
     overview: true,
@@ -199,10 +181,6 @@ const initReveal = async () => {
     await revealInstance.value.initialize();
     revealInstance.value.sync();
     revealInstance.value.layout();
-    if (useVueMode) {
-      await nextTick();
-      revealInstance.value.sync();
-    }
   } catch (error) {
     console.error('Failed to initialize Reveal.js:', error);
   }
@@ -255,9 +233,9 @@ onBeforeUnmount(() => {
       :style="{ transform: `scale(${zoomScale})`, transformOrigin: 'center center' }"
     >
       <!-- 结构与 React 官方示例一致：.reveal > .slides > section -->
-      <div ref="deckDivRef" class="reveal reveal-vue-deck">
+      <div ref="deckDivRef" class="reveal reveal-interactive-deck">
         <div class="slides">
-          <component :is="deckComponent" v-if="deckComponent" mode="slide" />
+          <component :is="deckComponent" v-if="deckComponent" />
         </div>
       </div>
     </div>
@@ -284,7 +262,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss">
-@use '../style/reveal/jarrett-theme.scss';
+@use '../style/reveal-presentation.scss';
 </style>
 
 <style lang="scss" scoped>

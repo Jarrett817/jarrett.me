@@ -4,13 +4,13 @@ import { base } from '../shared';
 import Components from 'unplugin-vue-components/vite';
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
 import vueJsx from '@vitejs/plugin-vue-jsx';
+
 export default defineConfig({
   lang: 'en-US',
   title: '🏠 JarrettBlog',
   titleTemplate: 'Vite & Vue powered static site generator',
   description: '前端学习笔记',
   base,
-  srcExclude: ['**/presenter-evidence.md'],
   appearance: true,
   lastUpdated: true,
   markdown: {
@@ -35,10 +35,11 @@ export default defineConfig({
   themeConfig,
   vite: {
     optimizeDeps: {
-      include: ['vueuc', '@vueuse/core']
+      include: ['vueuc'],
+      exclude: ['naive-ui', 'highlight.js', 'reveal.js']
     },
     ssr: {
-      noExternal: ['naive-ui', 'vueuc', '@css-render/vue3-ssr']
+      noExternal: ['naive-ui', 'vueuc', '@css-render/vue3-ssr', 'monaco-editor', 'reveal.js']
     },
     plugins: [
       Components({

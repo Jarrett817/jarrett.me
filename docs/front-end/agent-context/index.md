@@ -1,5 +1,9 @@
 <script setup>
-import ArticleSections from './article-sections.vue';
+import AgentContextSlides from './slides-deck.vue';
 </script>
 
-<ArticleSections mode="read" />
+<div class="reveal-slides-source">
+
+<AgentContextSlides />
+
+</div>
