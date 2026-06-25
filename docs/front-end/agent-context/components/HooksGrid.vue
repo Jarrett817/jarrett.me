@@ -13,35 +13,68 @@
     <div v-if="activeHook" class="detail">
       <p class="desc">{{ activeHook.desc }}</p>
       <p class="scenario">💡 {{ activeHook.scenario }}</p>
+      <CodeBlock v-if="activeHook.snippet" :code="activeHook.snippet" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import CodeBlock from './CodeBlock.vue';
+
+interface HookItem {
+  name: string;
+  desc: string;
+  scenario: string;
+  snippet?: string;
+}
 
 const active = ref('transformContext');
 
-const hooks = [
+const hooks: HookItem[] = [
   {
     name: 'transformContext',
-    desc: 'Agent 配置级：每次 LLM 调用前裁剪 messages',
-    scenario: '删 3 轮前的 toolResult 大输出，省 token 又不影响最近推理'
+    desc: 'AgentLoopConfig 配置：每次 LLM 调用前裁剪 messages',
+    scenario: '删 3 轮前的 toolResult 大输出，省 token 又不影响最近推理',
+    snippet: `// pi-agent-core · AgentLoopConfig
+transformContext: async (messages) => {
+  if (estimateTokens(messages) > MAX_TOKENS) {
+    return pruneOldMessages(messages);
+  }
+  return messages;
+}`
   },
   {
     name: 'context',
-    desc: 'Extension 事件：LLM 调用前修改消息列表',
-    scenario: '注入 RAG 检索到的文档片段，让 agent 回答时引用最新资料'
+    desc: 'Extension 事件：LLM 调用前修改消息列表（可增可删）',
+    scenario: '注入 RAG 检索到的文档片段，让 agent 回答时引用最新资料',
+    snippet: `// Extension event handler
+on("context", (event) => {
+  // event.messages 可原地修改
+  event.messages.push(ragContext);
+})`
   },
   {
     name: 'session_before_compact',
-    desc: '自定义 Compaction 摘要策略',
-    scenario: '保留用户原始创意输入完整内容，只压缩 agent 的中间推理过程'
+    desc: 'Extension 事件：Compaction 前触发，可自定义摘要策略或取消',
+    scenario: '保留用户原始创意输入完整内容，只压缩 agent 的中间推理过程',
+    snippet: `// SessionBeforeCompactEvent
+on("session_before_compact", (event) => {
+  // 可修改 event.preparation
+  // 可设置 event.customInstructions
+  // 返回 { cancel: true } 可阻止压缩
+})`
   },
   {
     name: 'before_agent_start',
-    desc: '改 systemPrompt / 注入前置消息',
-    scenario: '根据意图分类动态切换 system prompt：代码任务 vs 文案任务用不同指令集'
+    desc: 'Extension 事件：用户提交 prompt 后、agent loop 启动前',
+    scenario: '根据意图分类动态切换 system prompt：代码任务 vs 文案任务用不同指令集',
+    snippet: `// BeforeAgentStartEvent
+on("before_agent_start", (event) => {
+  // event.systemPrompt: 当前 system prompt
+  // event.prompt: 用户输入
+  // event.systemPromptOptions: 构建选项
+})`
   }
 ];
 

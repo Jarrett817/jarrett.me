@@ -17,11 +17,11 @@
       </button>
     </div>
 
-    <!-- 调用和结果要成对 -->
+    <!-- 放不下结果怎么办 -->
     <div v-if="active === 'pairing'" class="mt-2 space-y-2 text-[0.65rem]">
       <p class="rounded-lg bg-slate-100 px-2.5 py-2 text-gray-700">
-        这里说的是：<strong>发给 LLM 的对话记录格式不能坏</strong>。pi 会保证「调了工具」后面一定有「工具返回」，压缩时也不会从返回中间切开。
-        <span class="text-gray-500">——不等于模型看懂了全部内容。</span>
+        LLM API 协议要求：<strong>tool_use 后面必须跟 tool_result</strong
+        >。如果上下文放不下了，不能只留调用、丢掉返回。那怎么办？
       </p>
       <div class="space-y-1.5">
         <div
@@ -33,12 +33,17 @@
           <div class="mt-0.5 text-gray-600">{{ item.body }}</div>
         </div>
       </div>
+      <div class="rounded-lg border border-amber-200 bg-amber-50/60 px-2.5 py-2 text-gray-700">
+        <strong>所以不存在「只放下调用放不下结果」的情况</strong>——pi
+        在切点选择上就规避了这个问题。如果空间不够，整对（调用+结果）一起被压缩进摘要。
+      </div>
     </div>
 
     <!-- 截在哪 -->
     <div v-else-if="active === 'boundary'" class="mt-2 space-y-2 text-[0.65rem]">
       <p class="text-gray-600">
-        文件/命令输出太长时，pi 按<strong>行</strong>裁，不按「词」裁。尽量不出现半行乱码，但整行、整段仍可能被丢掉。
+        文件/命令输出太长时，pi
+        按<strong>行</strong>裁，不按「词」裁。尽量不出现半行乱码，但整行、整段仍可能被丢掉。
       </p>
       <div class="overflow-x-auto rounded-lg border border-slate-200">
         <table class="w-full text-left text-[0.62rem]">
@@ -61,29 +66,47 @@
         </table>
       </div>
       <div class="rounded-lg border border-amber-200 bg-amber-50/60 px-2.5 py-2 text-gray-700">
-        <strong>一个字会被劈成两半吗？</strong>
-        汉字不会在 UTF-8 字节中间切断。但如果一行特别长，可能只保留这一行的<strong>尾部一段</strong>，前面的字整段没了——需要模型再 read 补。
+        <strong>丢的是整行/整段内容，不是半个字。</strong>
+        模型看到的 toolResult 虽然不完整，但格式是合法的——丢了多少行、从哪接着读，都有提示。
       </div>
     </div>
 
     <!-- 丢了怎么补 -->
     <div v-else class="mt-2 space-y-2 text-[0.65rem]">
       <p class="text-gray-600">
-        被裁掉的内容，pi 会在 tool 返回末尾<strong>写明怎么继续读</strong>；更早的对话则靠窗口压缩时的摘要补上。
+        语义丢失后，靠两条路径补回：<strong>工具级</strong>的续读提示 +
+        <strong>会话级</strong>的压缩摘要。
       </p>
-      <div
-        v-for="hint in continuationHints"
-        :key="hint.tool"
-        class="rounded-lg border border-[#dbe3f0] bg-white p-2"
-      >
-        <span class="text-[0.62rem] font-semibold text-[#3e66ae]">{{ hint.tool }}</span>
-        <pre
-          class="mt-1 overflow-x-auto rounded bg-slate-900 px-2 py-1.5 text-[0.58rem] leading-relaxed text-slate-100"
-        ><code>{{ hint.example }}</code></pre>
-        <div class="mt-1 text-gray-500">{{ hint.note }}</div>
+
+      <div class="rounded-lg border border-[#dbe3f0] bg-white p-2.5">
+        <div class="mb-1.5 text-[0.62rem] font-bold text-[#3e66ae]">工具级：续读提示</div>
+        <p class="text-gray-600">
+          每次截断后，pi 在 toolResult 末尾追加提示，告诉模型：被截了多少、全量在哪、怎么接着读。
+        </p>
+        <div class="mt-2 space-y-1.5">
+          <div
+            v-for="hint in toolHints"
+            :key="hint.scene"
+            class="rounded border border-gray-100 bg-[#fafbfc] px-2 py-1.5"
+          >
+            <span class="font-semibold text-slate-700">{{ hint.scene }}</span>
+            <CodeBlock :code="hint.example" language="text" />
+          </div>
+        </div>
       </div>
+
+      <div class="rounded-lg border border-[#dbe3f0] bg-white p-2.5">
+        <div class="mb-1.5 text-[0.62rem] font-bold text-emerald-700">会话级：压缩摘要</div>
+        <p class="text-gray-600">
+          更早的对话（包括完整的 tool 调用链）被 Compaction 折叠成结构化摘要。模型通过摘要中的 Goal
+          / Progress / read-files 恢复上下文。
+        </p>
+        <CodeBlock :code="summaryExample" language="markdown" />
+      </div>
+
       <div class="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-2 text-gray-600">
-        模型要根据这些提示自己再调 read / grep / bash；pi 不会自动把裁掉的部分拼回去。
+        <strong>关键点：</strong>pi 不会自动把裁掉的内容补回来。它只提供线索，由模型自己决定要不要再
+        read / grep / bash。
       </div>
     </div>
   </div>
@@ -91,27 +114,28 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import CodeBlock from './CodeBlock.vue';
 
 const active = ref<'pairing' | 'boundary' | 'continue'>('pairing');
 
 const tabs = [
-  { id: 'pairing' as const, label: '① 调用和结果要成对' },
-  { id: 'boundary' as const, label: '② 截在哪一行' },
-  { id: 'continue' as const, label: '③ 丢了怎么补' }
+  { id: 'pairing' as const, label: '① 放不下结果怎么办' },
+  { id: 'boundary' as const, label: '② 截断边界在哪' },
+  { id: 'continue' as const, label: '③ 丢了怎么恢复' }
 ];
 
 const pairingItems = [
   {
-    title: '调了工具，就必须有返回',
-    body: '模型说「我要 read 某文件」→ 下一条消息一定是这次 read 的返回。不能只有调用、没有结果。'
+    title: '切点永远不落在 tool_result 上',
+    body: 'Compaction 的 findCutPoint 只允许在 user 或 assistant 消息处切开。tool_use + tool_result 作为整体要么全保留、要么全进摘要。'
   },
   {
-    title: '压缩对话时，不从返回中间切',
-    body: 'context 满了要压缩旧消息时，切点只能落在用户话或模型话上，不会把某次工具返回切成上下两半。'
+    title: '单条 toolResult 内部可以被截短，但消息本身不会被拆',
+    body: 'read 返回 8000 行文件只展示前 2000 行——内容不全，但消息格式完整，模型可以续读。'
   },
   {
-    title: '一次工具返回是一条完整消息',
-    body: 'read/bash/grep 就算内容被截短，也仍算同一条返回；不会拆成两条 tool 消息。'
+    title: '如果 tool_result 太大？在写入 messages 前就已截断',
+    body: '截断发生在工具执行层（truncateHead / truncateTail），进入 messages 的永远是合法大小的完整消息。'
   }
 ];
 
@@ -133,21 +157,27 @@ const boundaryRows = [
   }
 ];
 
-const continuationHints = [
+const toolHints = [
   {
-    tool: 'read 续读提示',
-    example: '[Showing lines 1-2000 of 8400. Use offset=2001 to continue.]',
-    note: '告诉模型下一批从第几行接着读。'
+    scene: 'read 文件截断',
+    example: '[Showing lines 1-2000 of 8400. Use offset=2001 to continue.]'
   },
   {
-    tool: 'bash 续读提示',
-    example: '[Showing lines … of …. Full output: /tmp/pi-bash-xxx.log]',
-    note: '全量输出在临时文件里，模型可以 read 那个文件。'
+    scene: 'bash 输出截断',
+    example: '[Showing last 2000 lines. Full output: /tmp/pi-bash-a1b2c3.log]'
   },
   {
-    tool: '窗口压缩摘要',
-    example: '## Goal … ## Progress … <read-files>…</read-files>',
-    note: '更早的对话合并成摘要，补上被删掉的上下文。'
+    scene: 'grep 行过长',
+    example: 'app.ts:412: export function handleSub... [truncated]'
   }
 ];
+
+const summaryExample = `## Goal
+修复 handleSubmit 的类型错误
+
+## Progress
+- 已 grep 定位到 auth.ts:42
+- 尝试修复但测试仍失败
+
+<read-files>src/auth.ts, src/app.ts</read-files>`;
 </script>

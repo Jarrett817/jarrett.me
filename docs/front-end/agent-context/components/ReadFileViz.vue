@@ -4,7 +4,8 @@
     <template v-if="mode === 'chunk'">
       <p class="text-[0.68rem] text-gray-500">
         续读时模型通常只传 <code>offset</code>，不传 <code>limit</code>——由 pi
-        <code>truncateHead</code> 自动截到 {{ MAX_LINES }} 行；<code>limit</code> 仅在精读等场景由模型自选。
+        <code>truncateHead</code> 自动截到 {{ MAX_LINES }} 行；<code>limit</code>
+        仅在精读等场景由模型自选。
       </p>
 
       <div class="grid grid-cols-3 gap-2 text-[0.65rem]">
@@ -22,7 +23,7 @@
 
         <div class="rounded-lg border border-[#3e66ae]/40 bg-[#eef3fb] p-2">
           <div class="mb-1 font-bold text-[#3e66ae]">模型发起</div>
-          <code class="block whitespace-pre-wrap text-[0.62rem] text-slate-800">{{ chunkSteps[chunkIdx].call }}</code>
+          <CodeBlock :code="chunkSteps[chunkIdx].call" language="text" />
         </div>
 
         <div class="rounded-lg border border-amber-200 bg-amber-50/60 p-2">
@@ -65,7 +66,7 @@
       <div class="grid grid-cols-2 gap-2">
         <div class="rounded-lg border border-gray-200 bg-gray-50 p-2">
           <div class="mb-1 text-[0.65rem] font-bold text-gray-500">① grep 进上下文（pi 实现）</div>
-          <code class="block text-[0.62rem] text-slate-800">{{ grepCall }}</code>
+          <CodeBlock :code="grepCall" language="json" />
           <div class="mt-2 space-y-0.5 font-mono text-[0.62rem]">
             <button
               v-for="(hit, i) in grepHits"
@@ -86,12 +87,16 @@
         </div>
 
         <div class="rounded-lg border border-[#3e66ae]/40 bg-[#eef3fb] p-2">
-          <div class="mb-1 text-[0.65rem] font-bold text-[#3e66ae]">② read 精读（模型自选，非 grep 内置）</div>
+          <div class="mb-1 text-[0.65rem] font-bold text-[#3e66ae]"
+            >② read 精读（模型自选，非 grep 内置）</div
+          >
           <p class="mb-1 text-[0.58rem] text-gray-500">
             行被截断到 {{ GREP_LINE_CHARS }} 字符、或需要更大范围时，模型再发起 read
           </p>
-          <code class="block whitespace-pre-wrap text-[0.62rem] text-slate-800">{{ grepReadCall }}</code>
-          <div class="mt-2 rounded bg-white/80 p-2 font-mono text-[0.6rem] leading-relaxed text-gray-700">
+          <CodeBlock :code="grepReadCall" language="text" />
+          <div
+            class="mt-2 rounded bg-white/80 p-2 font-mono text-[0.6rem] leading-relaxed text-gray-700"
+          >
             <div v-for="(ln, i) in grepReadPreview" :key="i">{{ ln }}</div>
           </div>
         </div>
@@ -111,7 +116,10 @@
               ? 'border-[#3e66ae] bg-[#eef3fb] font-semibold text-[#3e66ae]'
               : 'border-gray-200 text-gray-500'
           "
-          @click="tailTab = t.id; tailStepIdx = 0"
+          @click="
+            tailTab = t.id;
+            tailStepIdx = 0;
+          "
         >
           {{ t.label }}
         </button>
@@ -140,9 +148,7 @@
 
         <div v-if="activeTailStep.call" class="mt-2">
           <div class="mb-0.5 text-[0.58rem] font-semibold text-[#3e66ae]">调用</div>
-          <code class="block rounded bg-slate-900 px-2 py-1.5 text-[0.6rem] text-slate-100">{{
-            activeTailStep.call
-          }}</code>
+          <CodeBlock :code="activeTailStep.call" language="text" />
         </div>
 
         <div v-if="activeTailStep.who" class="mt-2 flex flex-wrap gap-1">
@@ -168,7 +174,9 @@
             <span :class="t.hit ? 'font-semibold text-amber-800' : 'text-gray-600'"
               >示意 {{ t.example }}</span
             >
-            <span v-if="t.hit" class="rounded bg-amber-200 px-1 text-[0.55rem] text-amber-900">触发</span>
+            <span v-if="t.hit" class="rounded bg-amber-200 px-1 text-[0.55rem] text-amber-900"
+              >触发</span
+            >
           </div>
         </div>
 
@@ -177,7 +185,9 @@
           class="mt-2 rounded border border-amber-200 bg-amber-50/60 p-2 font-mono text-[0.6rem] leading-relaxed text-amber-900"
         >
           <div v-for="(ln, i) in activeTailStep.output" :key="i">{{ ln }}</div>
-          <div v-if="activeTailStep.hint" class="mt-1.5 text-amber-700">{{ activeTailStep.hint }}</div>
+          <div v-if="activeTailStep.hint" class="mt-1.5 text-amber-700">{{
+            activeTailStep.hint
+          }}</div>
         </div>
 
         <div v-if="activeTailStep.actions?.length" class="mt-2 space-y-1">
@@ -198,6 +208,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import CodeBlock from './CodeBlock.vue';
 
 withDefaults(
   defineProps<{
@@ -332,8 +343,7 @@ const bashTailSteps: TailStep[] = [
       '  Expected true, received false',
       '  at handleSubmit (auth.ts:42)'
     ],
-    hint:
-      '[Showing lines 11801-12000 of 12000. Full output: /tmp/pi-bash-a1b2c3.log]（pi 生成的提示格式，行号为示意）'
+    hint: '[Showing lines 11801-12000 of 12000. Full output: /tmp/pi-bash-a1b2c3.log]（pi 生成的提示格式，行号为示意）'
   },
   {
     id: 'more',

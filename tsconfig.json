@@ -20,6 +20,7 @@
   },
   // .xx文件夹路径会被忽略，需要写明具体路径
   "include": [
+    "env.d.ts",
     "docs/.vitepress/**/*.ts",
     "docs/.vitepress/**/*.d.ts",
     "docs/.vitepress/**/*.tsx",

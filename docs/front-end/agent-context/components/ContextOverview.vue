@@ -41,14 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ArrowRight,
-  Close,
-  MachineLearning,
-  Renew,
-  SendAlt,
-  ShrinkScreen
-} from '@vicons/carbon';
+import { ArrowRight, Close, MachineLearning, Renew, SendAlt, ShrinkScreen } from '@vicons/carbon';
 import DeckIcon from './DeckIcon.vue';
 
 withDefaults(
@@ -60,7 +53,7 @@ withDefaults(
 
 const blocks = [
   { id: 'turn', icon: SendAlt, label: '当前对话' },
-  { id: 'zip', icon: ShrinkScreen, label: '窗口压缩' },
-  { id: 'mem', icon: MachineLearning, label: '跨轮记忆' }
+  { id: 'zip', icon: ShrinkScreen, label: '上下文压缩' },
+  { id: 'mem', icon: MachineLearning, label: '持久记忆' }
 ];
 </script>

@@ -12,13 +12,10 @@ import MemoryGranularity from './components/MemoryGranularity.vue';
 import MemoryMap from './components/MemoryMap.vue';
 import MemoryStack from './components/MemoryStack.vue';
 import MemoryLoop from './components/MemoryLoop.vue';
-
-const props = withDefaults(
-  defineProps<{
-    mode?: 'slide' | 'read';
-  }>(),
-  { mode: 'read' }
-);
+import RuntimeInject from './components/RuntimeInject.vue';
+import HooksGrid from './components/HooksGrid.vue';
+import SubAgentRead from './components/SubAgentRead.vue';
+import CompareTable from './components/CompareTable.vue';
 
 type PartId = 'turn' | 'compact' | 'memory';
 
@@ -26,22 +23,19 @@ const parts: Record<PartId, { num: string; title: string; desc: string }> = {
   turn: {
     num: '01',
     title: '当前对话',
-    desc: 'messages 工作台：拼装流水线、大文件读取、截断后的连贯性'
+    desc: '模型每轮看到什么、大文件怎么读、截断了怎么办'
   },
   compact: {
     num: '02',
-    title: '窗口压缩',
-    desc: 'context window 内的信息管理：主动压缩、策略组合与 keepRecent'
+    title: '上下文压缩',
+    desc: 'Context Compaction：对话历史超出窗口时的信息压缩策略'
   },
   memory: {
     num: '03',
-    title: '跨轮记忆',
-    desc: '窗口外持久化：写入标准、类型划分、粒度与读回路径'
+    title: '持久记忆',
+    desc: 'Persistent Memory：跨会话的知识持久化与读回'
   }
 };
-
-const slide = () => props.mode === 'slide';
-const frag = (extra = '') => (slide() ? `fragment ${extra}`.trim() : extra);
 
 const partAccent: Record<PartId, string> = {
   turn: 'border-l-blue-600',
@@ -52,198 +46,294 @@ const partAccent: Record<PartId, string> = {
 const partBadgeClass = (part: PartId) =>
   [
     'inline-block border-l-[3px] bg-gray-50 font-semibold tracking-wide text-gray-600',
-    slide() ? 'mb-[0.55em] px-[0.55em] py-[0.18em] text-[0.42em]' : 'mb-3 px-2.5 py-1 text-xs',
+    'mb-3 px-2.5 py-1 text-xs',
     partAccent[part]
   ].join(' ');
-
-const partDividerClass = () =>
-  slide() ? 'deck-part-divider text-center' : 'mt-16 border-t-2 border-gray-200 pt-10';
-
-const partNumClass = () =>
-  slide() ? 'm-0 text-[0.5em] font-semibold tracking-widest text-gray-400' : 'm-0 text-xs font-semibold tracking-widest text-gray-400';
-
-const partTitleClass = () =>
-  slide()
-    ? 'm-0 mb-[0.4em] text-[1.55em] font-bold text-gray-900'
-    : 'mt-1 text-[1.75rem] font-bold text-gray-900';
-
-const partDescClass = () =>
-  slide()
-    ? 'mx-auto mt-0 max-w-[24em] text-[0.58em] leading-relaxed text-gray-500'
-    : 'mt-2 text-[0.9em] text-gray-600';
-
-const lead = () =>
-  slide()
-    ? 'mb-3 max-w-[95%] text-[0.68em] leading-relaxed text-gray-600'
-    : 'text-[0.85em] text-gray-600';
-
-const note = () =>
-  slide() ? 'text-[0.58em] leading-snug text-gray-500' : 'text-[0.75em] text-gray-500';
-
-const sectionGap = () => (slide() ? undefined : 'mt-10');
-const coverClass = () => (slide() ? 'deck-cover text-center' : undefined);
-const coverSubtitleClass = () =>
-  slide() ? 'mx-auto max-w-[22em] text-[0.55em] font-normal text-gray-500' : undefined;
 </script>
 
 <template>
-  <section :class="coverClass()">
+  <section>
     <h1>Agent 的上下文管理</h1>
-    <blockquote :class="slide() ? `${frag()} ${coverSubtitleClass()}` : undefined">
-      <p>当前对话 · 窗口压缩 · 跨轮记忆</p>
+    <blockquote>
+      <p>有限窗口下的设计哲学 · 当前对话 · 上下文压缩 · 持久记忆</p>
     </blockquote>
   </section>
 
-  <section :class="sectionGap()">
-    <h3>核心约束</h3>
-    <p :class="lead()">
-      LLM 无跨调用记忆：每轮请求传入完整 <code>messages</code>。超出 context window 后从最早消息截断；输入 token 随历史增长而增加。
+  <section>
+    <h3>所有 Agent 面临的同一个约束</h3>
+    <p class="fragment text-[0.85em] text-gray-600">
+      无论是 Claude Code、Cursor、Kiro 还是 pi——底层 LLM 都没有跨调用记忆。 每次请求必须传入完整
+      <code>messages</code>，context window 有限，而 Agent 任务链可以无限长。
+      所有上下文管理策略都是在解同一道题：<strong>有限窗口 × 无限任务</strong>。
     </p>
-    <ContextOverview part="limits" />
-    <ContextOverview part="blocks" :class="frag('mt-3')" />
+    <ContextOverview class="fragment" part="limits" />
+    <ContextOverview class="fragment mt-3" part="blocks" />
   </section>
 
-  <section :class="partDividerClass()">
-    <p :class="partNumClass()">{{ parts.turn.num }}</p>
-    <h2 :class="partTitleClass()">{{ parts.turn.title }}</h2>
-    <p :class="partDescClass()">{{ parts.turn.desc }}</p>
+  <section>
+    <p class="m-0 text-xs font-semibold tracking-widest text-gray-400">{{ parts.turn.num }}</p>
+    <h2 class="mt-1 text-[1.75rem] font-bold text-gray-900">{{ parts.turn.title }}</h2>
+    <p class="fragment mt-2 text-[0.9em] text-gray-600">{{ parts.turn.desc }}</p>
   </section>
 
-  <section :class="sectionGap()">
+  <section>
     <p :class="partBadgeClass('turn')">{{ parts.turn.num }} · {{ parts.turn.title }}</p>
     <h3>短期记忆：messages 列表</h3>
-    <p :class="lead()">
+    <p class="fragment text-[0.85em] text-gray-600">
       当前任务的 <code>messages</code> 即工作台；每次 API 调用携带该列表的全量内容。
     </p>
-    <ContextOverview part="loop" />
+    <ContextOverview class="fragment" part="loop" />
   </section>
 
-  <section :class="sectionGap()">
+  <section>
     <p :class="partBadgeClass('turn')">{{ parts.turn.num }} · {{ parts.turn.title }}</p>
-    <h3>调用前流水线</h3>
-    <p :class="lead()">拼上下文 → 裁剪/注入 → 过滤映射 → 调用 LLM；每步明确拼入什么、裁掉什么，最终形成模型请求体。</p>
-    <ContextPipeline />
+    <h3>模型每轮收到什么</h3>
+    <p class="fragment text-[0.85em] text-gray-600"
+      >每次调用 LLM，请求体由三部分组成：system
+      prompt（固定指令）、messages（对话记录）、以及发送前的裁剪转换。</p
+    >
+    <ContextPipeline class="fragment" />
   </section>
 
-  <section :class="sectionGap()">
+  <section>
     <p :class="partBadgeClass('turn')">{{ parts.turn.num }} · {{ parts.turn.title }}</p>
     <h3>大文件读取：分块续读</h3>
-    <p :class="lead()">
-      pi 的 <code>read</code> 从磁盘读全文件后切片；单次 toolResult 硬上限 2000 行或 50KB，超出部分附带
-      <code>Use offset=… to continue</code> 提示，由模型多轮续读。
+    <p class="fragment text-[0.85em] text-gray-600">
+      pi 的 <code>read</code> 从磁盘读全文件后切片；单次 toolResult 硬上限 2000 行或
+      50KB，超出部分附带 <code>Use offset=… to continue</code> 提示，由模型多轮续读。
     </p>
-    <ReadFileViz mode="chunk" />
+    <ReadFileViz class="fragment" mode="chunk" />
   </section>
 
-  <section :class="sectionGap()">
+  <section>
     <p :class="partBadgeClass('turn')">{{ parts.turn.num }} · {{ parts.turn.title }}</p>
     <h3>大文件读取：关键词定位</h3>
-    <p :class="lead()">
-      pi <code>grep</code> 调 ripgrep，返回 <code>文件:行号: 内容</code>（默认 100 条匹配、单行 500 字符）；
-      需要更大范围时，模型可再 <code>read(offset, limit)</code>——这是常见策略，不是 grep 内置第二步。
+    <p class="fragment text-[0.85em] text-gray-600">
+      pi <code>grep</code> 调 ripgrep，返回 <code>文件:行号: 内容</code>（默认 100 条匹配、单行 500
+      字符）； 需要更大范围时，模型可再 <code>read(offset, limit)</code>——这是常见策略，不是 grep
+      内置第二步。
     </p>
-    <ReadFileViz mode="grep" />
+    <ReadFileViz class="fragment" mode="grep" />
   </section>
 
-  <section :class="sectionGap()">
+  <section>
     <p :class="partBadgeClass('turn')">{{ parts.turn.num }} · {{ parts.turn.title }}</p>
-    <h3>大文件读取：尾部场景</h3>
-    <p :class="lead()">
-      bash 输出超限：pi 统计 stdout+stderr，超 2000 行或 50KB 自动 truncateTail；读日志末尾由模型发
-      <code>tail</code>；不够则 read 临时文件或扩大范围。
+    <h3>大文件读取：超长 bash 输出</h3>
+    <p class="fragment text-[0.85em] text-gray-600">
+      bash 命令输出超限时，pi 自动保留末尾 2000 行或 50KB（truncateTail），因为错误信息通常在最后。
+      不够时模型可 read 临时文件或缩小命令重跑。
     </p>
-    <ReadFileViz mode="tail" />
+    <ReadFileViz class="fragment" mode="tail" />
   </section>
 
-  <section :class="sectionGap()">
+  <section>
     <p :class="partBadgeClass('turn')">{{ parts.turn.num }} · {{ parts.turn.title }}</p>
-    <h3>截断后怎么衔接</h3>
-    <p :class="lead()">
-      三件事：工具调用和返回要成对；裁切按行不按词；裁掉的部分靠续读提示和压缩摘要补——pi 保证格式不乱，不保证模型一次看懂全部。
+    <h3>大文件读取：委派 Sub-agent</h3>
+    <p class="fragment text-[0.85em] text-gray-600">
+      不塞进主上下文——派 sub-agent 在独立窗口读完，只返回结论。
     </p>
-    <CoherenceViz />
+    <SubAgentRead class="fragment" />
   </section>
 
-  <section :class="partDividerClass()">
-    <p :class="partNumClass()">{{ parts.compact.num }}</p>
-    <h2 :class="partTitleClass()">{{ parts.compact.title }}</h2>
-    <p :class="partDescClass()">{{ parts.compact.desc }}</p>
+  <section>
+    <p :class="partBadgeClass('turn')">{{ parts.turn.num }} · {{ parts.turn.title }}</p>
+    <h3>截断后语义丢失了怎么办</h3>
+    <CoherenceViz class="fragment" />
   </section>
 
-  <section :class="sectionGap()">
+  <section>
+    <p class="m-0 text-xs font-semibold tracking-widest text-gray-400">{{ parts.compact.num }}</p>
+    <h2 class="mt-1 text-[1.75rem] font-bold text-gray-900">{{ parts.compact.title }}</h2>
+    <p class="fragment mt-2 text-[0.9em] text-gray-600">{{ parts.compact.desc }}</p>
+  </section>
+
+  <section>
     <p :class="partBadgeClass('compact')">{{ parts.compact.num }} · {{ parts.compact.title }}</p>
     <h3>主动压缩</h3>
-    <ProactiveCompress />
+    <ProactiveCompress class="fragment" />
   </section>
 
-  <section :class="sectionGap()">
+  <section>
     <p :class="partBadgeClass('compact')">{{ parts.compact.num }} · {{ parts.compact.title }}</p>
-    <h3>记忆压缩方法</h3>
-    <p :class="lead()">
-      常见组合：滑动窗口 + 摘要压缩。亦可叠加重要性过滤与结构化抽取。
+    <h3>压缩策略有哪几种</h3>
+    <p class="fragment text-[0.85em] text-gray-600">
+      四种策略，只有摘要压缩是内置自动的。其余需要自己实现。
     </p>
-    <CompressionMethods />
-    <p :class="frag(`mt-3 ${note()}`)">
-      Prompt Caching（计算层）与记忆压缩（信息层）互补，不互相替代。
+    <CompressionMethods class="fragment" />
+    <p class="fragment mt-3 text-[0.75em] text-gray-500">
+      注：Prompt Caching 是计算层优化（重复前缀不重新计算），和信息层的压缩互补，不互相替代。
     </p>
   </section>
 
-  <section :class="sectionGap()">
+  <section>
     <p :class="partBadgeClass('compact')">{{ parts.compact.num }} · {{ parts.compact.title }}</p>
-    <h3>实现：keepRecent 切分</h3>
-    <p :class="lead()">
-      切点之后保留原文；更早历史合并为摘要；右侧预留回复 token。
+    <h3>压缩的具体过程</h3>
+    <p class="fragment text-[0.78em] text-gray-600">
+      token 消耗呈锯齿形：涨到阈值 → 压缩降回来 → 又涨 → 又压。
     </p>
-    <CompactionViz />
-    <p :class="frag(`mt-3 ${lead()}`)">
-      触发条件：已用 token &gt; 窗口上限 − 回复预留
-    </p>
-    <CompactionSteps :class="frag('mt-3')" />
+    <CompactionViz class="fragment" />
+    <CompactionSteps class="fragment mt-3" />
+    <div
+      class="fragment mt-3 rounded-lg border-2 border-amber-200 bg-amber-50/60 px-2.5 py-2 text-[0.72em] text-gray-700"
+    >
+      <strong>越聊越久，最早的记忆越模糊。</strong>关键约束必须写进磁盘文件，不能只靠摘要传递。
+    </div>
   </section>
 
-  <section :class="partDividerClass()">
-    <p :class="partNumClass()">{{ parts.memory.num }}</p>
-    <h2 :class="partTitleClass()">{{ parts.memory.title }}</h2>
-    <p :class="partDescClass()">{{ parts.memory.desc }}</p>
+  <section>
+    <p class="m-0 text-xs font-semibold tracking-widest text-gray-400">{{ parts.memory.num }}</p>
+    <h2 class="mt-1 text-[1.75rem] font-bold text-gray-900">{{ parts.memory.title }}</h2>
+    <p class="fragment mt-2 text-[0.9em] text-gray-600">{{ parts.memory.desc }}</p>
   </section>
 
-  <section :class="sectionGap()">
+  <section>
     <p :class="partBadgeClass('memory')">{{ parts.memory.num }} · {{ parts.memory.title }}</p>
-    <h3>写入标准</h3>
-    <p :class="lead()">仅持久化对后续任务有增量价值的信息。</p>
-    <MemoryStoreGuide />
+    <h3>压缩摘要 ≠ 持久记忆</h3>
+    <div class="fragment grid grid-cols-2 gap-3 text-left text-[0.7em]">
+      <div class="rounded-lg border border-amber-200 bg-amber-50/50 p-2.5">
+        <div class="font-bold text-amber-800">压缩摘要</div>
+        <ul class="mt-1.5 space-y-0.5 text-gray-700">
+          <li>token 超限时自动触发</li>
+          <li>存在当前会话 messages 里</li>
+          <li>会话结束即消亡</li>
+        </ul>
+      </div>
+      <div class="rounded-lg border border-emerald-200 bg-emerald-50/50 p-2.5">
+        <div class="font-bold text-emerald-700">持久记忆</div>
+        <ul class="mt-1.5 space-y-0.5 text-gray-700">
+          <li>模型自行决定何时写入</li>
+          <li>存在磁盘文件</li>
+          <li>永久保留</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
-  <section :class="sectionGap()">
+  <section>
     <p :class="partBadgeClass('memory')">{{ parts.memory.num }} · {{ parts.memory.title }}</p>
-    <h3>跨轮记忆类型</h3>
-    <p :class="lead()">
-      任务结束后 <code>messages</code> 清空；跨轮数据落盘后，在拼上下文阶段注入。
-    </p>
-    <MemoryMap />
+    <h3>记忆何时写入——模型自行决策</h3>
+    <div class="fragment space-y-1 text-[0.72em] text-gray-700">
+      <div
+        ><span class="font-semibold text-gray-600">Claude Code：</span>模型主动调用 memory tool
+        写入笔记</div
+      >
+      <div
+        ><span class="font-semibold text-gray-600">pi hermes-memory：</span>每 N 轮用独立 LLM
+        审查对话 → 决定写什么</div
+      >
+      <div
+        ><span class="font-semibold text-gray-600">Kiro：</span>agent 提议修改 steering
+        files，人确认</div
+      >
+      <div
+        ><span class="font-semibold text-gray-600">Cursor：</span>不自动写，靠 .cursorrules
+        人工维护</div
+      >
+    </div>
   </section>
 
-  <section :class="sectionGap()">
+  <section>
+    <p :class="partBadgeClass('memory')">{{ parts.memory.num }} · {{ parts.memory.title }}</p>
+    <h3>什么值得写入记忆</h3>
+    <p class="fragment text-[0.85em] text-gray-600"
+      >仅持久化对后续任务有增量价值的信息——不是所有压缩摘要都该变成记忆。</p
+    >
+    <MemoryStoreGuide class="fragment" />
+  </section>
+
+  <section>
+    <p :class="partBadgeClass('memory')">{{ parts.memory.num }} · {{ parts.memory.title }}</p>
+    <h3>记忆用久了会烂——整合（Consolidation）</h3>
+    <p class="fragment text-[0.85em] text-gray-600">
+      持久记忆不是写进去就完事了。用久了会出现重复、过时、互相矛盾的条目。需要定期整合：
+    </p>
+    <div class="fragment mt-3 space-y-2 text-left text-[0.78em]">
+      <div class="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-gray-700">
+        <span class="font-semibold text-gray-800">去重</span>
+        — "用户喜欢简洁代码" + "代码要精简" + "不要冗余" → 合并成一条
+      </div>
+      <div class="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-gray-700">
+        <span class="font-semibold text-gray-800">冲突消解</span>
+        — "用户偏好 Python"（3月）vs "最近转用 Go 了"（6月）→ 保留最新，标记旧的过期
+      </div>
+      <div class="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-gray-700">
+        <span class="font-semibold text-gray-800">抽象提炼</span>
+        — 多次"动态渲染网站用 Selenium 才行"的经历 → 提炼成通用规律："动态渲染优先
+        Playwright/Selenium"
+      </div>
+      <div class="rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2 text-gray-700">
+        <strong>hermes-memory 的实现：</strong>容量超限时自动触发 consolidation——用 LLM
+        审查全部条目，合并重复、删除过时、提炼规律。每条记忆带时间戳用于冲突消解。
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p :class="partBadgeClass('memory')">{{ parts.memory.num }} · {{ parts.memory.title }}</p>
+    <h3>记忆有哪些类型、怎么进入模型</h3>
+    <p class="fragment text-[0.85em] text-gray-600">
+      不是所有记忆每轮都带给模型。两种注入方式：自动注入（每轮必带）vs 按需检索（模型主动调 tool）。
+    </p>
+    <MemoryMap class="fragment" />
+  </section>
+
+  <section>
     <p :class="partBadgeClass('memory')">{{ parts.memory.num }} · {{ parts.memory.title }}</p>
     <h3>存储粒度</h3>
-    <MemoryGranularity />
+    <MemoryGranularity class="fragment" />
   </section>
 
-  <section :class="sectionGap()">
+  <section>
     <p :class="partBadgeClass('memory')">{{ parts.memory.num }} · {{ parts.memory.title }}</p>
     <h3>持久化与读回</h3>
-    <p :class="lead()">磁盘：1 行 JSON = 1 entry。读回：转为 message 或摘要块后拼入上下文。</p>
-    <MemoryStack />
+    <p class="fragment text-[0.85em] text-gray-600"
+      >磁盘：1 行 JSON = 1 entry。读回：转为 message 或摘要块后拼入上下文。</p
+    >
+    <MemoryStack class="fragment" />
   </section>
 
-  <section :class="sectionGap()">
-    <h3>记忆生命周期</h3>
-    <p :class="lead()">读（任务开始注入）→ 用（执行中维持 messages）→ 写（任务结束落盘）。</p>
-    <MemoryLoop />
-    <ul :class="frag(slide() ? 'mt-4 space-y-1 ' + lead() : 'mt-4 space-y-1 text-[0.85em] text-gray-700')">
-      <li><strong>当前对话</strong>：本轮 LLM 可见的全部输入</li>
-      <li><strong>窗口压缩</strong>：context window 内的信息管理策略</li>
-      <li><strong>跨轮记忆</strong>：窗口外持久化，按需注入</li>
+  <section>
+    <p :class="partBadgeClass('memory')">{{ parts.memory.num }} · {{ parts.memory.title }}</p>
+    <h3>运行时主动控制</h3>
+    <p class="fragment text-[0.85em] text-gray-600">
+      Agent 运行中可通过三种机制注入新指令：Steering 即时插入、Follow-up
+      完成后续、持久规则每轮重读。
+    </p>
+    <RuntimeInject class="fragment" />
+  </section>
+
+  <section>
+    <p :class="partBadgeClass('memory')">{{ parts.memory.num }} · {{ parts.memory.title }}</p>
+    <h3>扩展钩子</h3>
+    <p class="fragment text-[0.85em] text-gray-600">
+      pi-agent 在上下文生命周期的关键节点暴露 hook，Extension 可以监听事件并修改行为。
+    </p>
+    <HooksGrid class="fragment" />
+  </section>
+
+  <section>
+    <h3>各家 Agent 的设计决策对比</h3>
+    <CompareTable class="fragment" />
+  </section>
+
+  <section>
+    <h3>全文总结：读 → 用 → 写</h3>
+    <MemoryLoop class="fragment" />
+    <ul class="fragment mt-4 space-y-1 text-[0.85em] text-gray-700">
+      <li
+        ><strong>读</strong>：从磁盘加载规则 + 持久记忆 → 注入 system
+        prompt，模型带着背景进入任务</li
+      >
+      <li
+        ><strong>用</strong>：messages 维持任务状态；满了做压缩（摘要替换旧消息）；大文件分块或委派
+        sub-agent</li
+      >
+      <li><strong>写</strong>：任务完成后，Agent 判断哪些信息值得记住 → 写入磁盘 → 下次读回</li>
     </ul>
+    <div
+      class="fragment mt-4 rounded-lg border border-[#dbe3f0] bg-[#fafbfc] px-3 py-2.5 text-[0.78em] text-gray-600"
+    >
+      用得越多 → 记忆越厚 → 下次理解任务越快。这个正循环是 Agent 从"单次工具"变成"长期助手"的关键。
+    </div>
   </section>
 </template>
