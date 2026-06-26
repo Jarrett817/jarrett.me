@@ -8,11 +8,8 @@ import CompressionMethods from './components/CompressionMethods.vue';
 import CompactionViz from './components/CompactionViz.vue';
 import CompactionSteps from './components/CompactionSteps.vue';
 import MemoryStoreGuide from './components/MemoryStoreGuide.vue';
-import MemoryGranularity from './components/MemoryGranularity.vue';
 import MemoryMap from './components/MemoryMap.vue';
-import MemoryStack from './components/MemoryStack.vue';
-import MemoryLoop from './components/MemoryLoop.vue';
-import RuntimeInject from './components/RuntimeInject.vue';
+import MemoryGranularity from './components/MemoryGranularity.vue';
 import HooksGrid from './components/HooksGrid.vue';
 import SubAgentRead from './components/SubAgentRead.vue';
 import CompareTable from './components/CompareTable.vue';
@@ -173,7 +170,6 @@ const partBadgeClass = (part: PartId) =>
         >token 消耗呈锯齿形：涨到阈值 → 压缩降回来 → 又涨 → 又压。</p
       >
       <CompactionViz class="fragment" />
-      <CompactionSteps class="fragment mt-3" />
       <div
         class="fragment mt-3 rounded-lg border-2 border-amber-200 bg-amber-50/60 px-2.5 py-2 text-[0.72em] text-gray-700"
       >
@@ -188,6 +184,51 @@ const partBadgeClass = (part: PartId) =>
       <p class="m-0 text-xs font-semibold tracking-widest text-gray-400">{{ parts.memory.num }}</p>
       <h2 class="mt-1 text-[1.75rem] font-bold text-gray-900">{{ parts.memory.title }}</h2>
       <p class="fragment mt-2 text-[0.9em] text-gray-600">{{ parts.memory.desc }}</p>
+    </section>
+
+    <section>
+      <h3>记忆的四个层次</h3>
+      <div class="fragment space-y-1.5 text-[0.72em]">
+        <div class="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2">
+          <span
+            class="shrink-0 rounded bg-gray-100 px-1.5 py-0.5 text-[0.6rem] font-bold text-gray-500"
+            >最短暂</span
+          >
+          <div><strong>感知记忆</strong> — 当前这条输入，处理完就消失</div>
+        </div>
+        <div
+          class="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50/50 px-3 py-2"
+        >
+          <span
+            class="shrink-0 rounded bg-blue-100 px-1.5 py-0.5 text-[0.6rem] font-bold text-blue-700"
+            >会话内</span
+          >
+          <div><strong>短期记忆</strong> — messages 列表，任务结束就清空（第一章已讲）</div>
+        </div>
+        <div
+          class="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50/50 px-3 py-2"
+        >
+          <span
+            class="shrink-0 rounded bg-emerald-100 px-1.5 py-0.5 text-[0.6rem] font-bold text-emerald-700"
+            >跨会话</span
+          >
+          <div><strong>长期记忆</strong> — 磁盘/数据库持久化，语义检索召回</div>
+        </div>
+        <div
+          class="flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50/50 px-3 py-2"
+        >
+          <span
+            class="shrink-0 rounded bg-purple-100 px-1.5 py-0.5 text-[0.6rem] font-bold text-purple-700"
+            >结构化</span
+          >
+          <div
+            ><strong>实体记忆</strong> — 长期记忆的精炼版：从文本中提取为结构化字段，可精确查询</div
+          >
+        </div>
+      </div>
+      <p class="fragment mt-2 text-[0.65em] text-gray-500">
+        长期记忆可细分：情节记忆（具体经历）、语义记忆（提炼规律）、程序记忆（操作流程）。
+      </p>
     </section>
 
     <section>
@@ -238,7 +279,7 @@ const partBadgeClass = (part: PartId) =>
 
     <section>
       <p :class="partBadgeClass('memory')">{{ parts.memory.num }} · {{ parts.memory.title }}</p>
-      <h3>什么值得写入记忆</h3>
+      <h3>什么会被写入记忆——由 LLM 判断</h3>
       <MemoryStoreGuide class="fragment" />
     </section>
 
@@ -275,14 +316,24 @@ const partBadgeClass = (part: PartId) =>
 
     <section>
       <p :class="partBadgeClass('memory')">{{ parts.memory.num }} · {{ parts.memory.title }}</p>
-      <h3>持久化与读回</h3>
-      <MemoryStack class="fragment" />
-    </section>
-
-    <section>
-      <p :class="partBadgeClass('memory')">{{ parts.memory.num }} · {{ parts.memory.title }}</p>
-      <h3>运行时主动控制</h3>
-      <RuntimeInject class="fragment" />
+      <h3>记忆存在哪</h3>
+      <div class="fragment space-y-1.5 text-[0.7em]">
+        <div class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-gray-700">
+          <strong>Markdown 文件</strong> — 最简单：MEMORY.md / USER.md，每轮读取拼入。pi
+          hermes-memory、Claude Code 都用这种。
+        </div>
+        <div class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-gray-700">
+          <strong>SQLite（全文检索）</strong> — pi hermes-memory 的会话搜索用 FTS5
+          索引，支持按关键词检索历史会话。
+        </div>
+        <div class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-gray-700">
+          <strong>向量数据库</strong> — Mem0、Letta 等框架用 embedding
+          做语义检索，适合大量非结构化记忆。
+        </div>
+        <div class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-gray-700">
+          <strong>知识图谱</strong> — Zep/Graphiti 用三元组存储实体关系，支持多跳推理。
+        </div>
+      </div>
     </section>
 
     <section>
@@ -292,7 +343,7 @@ const partBadgeClass = (part: PartId) =>
     </section>
   </section>
 
-  <!-- ═══ 对比 + 总结（纵向） ═══ -->
+  <!-- ═══ 对比 + 启发（纵向） ═══ -->
   <section>
     <section>
       <h3>各家 Agent 的设计决策对比</h3>
@@ -300,18 +351,29 @@ const partBadgeClass = (part: PartId) =>
     </section>
 
     <section>
-      <h3>全文总结：读 → 用 → 写</h3>
-      <MemoryLoop class="fragment" />
-      <ul class="fragment mt-4 space-y-1 text-[0.85em] text-gray-700">
-        <li><strong>读</strong>：从磁盘加载规则 + 持久记忆 → 注入 system prompt</li>
-        <li><strong>用</strong>：messages 维持状态；满了做压缩；大文件分块或委派 sub-agent</li>
-        <li><strong>写</strong>：Agent 判断值得记住的信息 → 写入磁盘 → 下次读回</li>
+      <h3>了解上下文管理后，怎么用好 Agent</h3>
+      <ul class="fragment space-y-2 text-[0.78em] text-gray-700">
+        <li
+          ><strong>关键约束写进规则文件</strong>——不要只口头说"用 TypeScript"，写进 CLAUDE.md /
+          .cursorrules，永远不会被压缩掉</li
+        >
+        <li
+          ><strong>长对话主动开新会话</strong>——与其让 Agent
+          反复压缩丢细节，不如在关键节点开新会话、把结论带过去</li
+        >
+        <li
+          ><strong>大任务拆成小任务</strong
+          >——每个小任务在一个干净的上下文里完成，比一个超长会话效果好</li
+        >
+        <li
+          ><strong>别重复粘贴大段代码</strong>——Agent 能自己 read 文件，你粘进去只是浪费
+          token、加速触发压缩</li
+        >
+        <li
+          ><strong>发现 Agent "失忆"时</strong
+          >——不是它笨，是上下文被压缩了。重新明确关键信息，或检查规则文件是否缺失</li
+        >
       </ul>
-      <div
-        class="fragment mt-4 rounded-lg border border-[#dbe3f0] bg-[#fafbfc] px-3 py-2.5 text-[0.78em] text-gray-600"
-      >
-        用得越多 → 记忆越厚 → 下次理解任务越快。这是 Agent 从"单次工具"变成"长期助手"的关键。
-      </div>
     </section>
   </section>
 </template>

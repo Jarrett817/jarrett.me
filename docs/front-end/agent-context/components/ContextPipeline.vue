@@ -130,8 +130,9 @@ const blocks = [
 const systemItems = [
   { name: '工具定义', desc: '模型可以调用哪些工具、参数格式' },
   { name: '行为约束', desc: '输出风格、安全规则、角色设定' },
-  { name: '项目规则', desc: 'CLAUDE.md / .cursorrules — 每轮从磁盘重读' },
-  { name: '持久记忆', desc: '自动笔记 + 用户画像（hermes-memory 等在此注入）' }
+  { name: '项目规则', desc: 'CLAUDE.md / .cursorrules — 每轮从磁盘重读，全量注入' },
+  { name: '持久记忆', desc: '自动笔记 + 用户画像（每轮注入，有容量上限）' },
+  { name: '技能描述', desc: '每个 skill 只注入一行触发描述，匹配到才加载完整内容' }
 ];
 
 const messageExample = [
