@@ -113,8 +113,7 @@ const partBadgeClass = (part: PartId) =>
       <p :class="partBadgeClass('turn')">{{ parts.turn.num }} · {{ parts.turn.title }}</p>
       <h3>大文件读取：关键词定位</h3>
       <p class="fragment text-[0.85em] text-gray-600">
-        grep 返回 <code>文件:行号: 内容</code>（默认 100 条匹配、单行 500
-        字符），需要更大范围时模型再 <code>read(offset, limit)</code>。
+        不需要从头读——grep 直接返回匹配行的内容和行号。需要看上下文时再 read 那一小段。
       </p>
       <ReadFileViz class="fragment" mode="grep" />
     </section>
