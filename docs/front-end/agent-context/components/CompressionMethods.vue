@@ -59,7 +59,7 @@ const methods: Method[] = [
   {
     id: 'summary',
     title: '摘要压缩（Compaction）',
-    brief: 'pi 的核心策略：用 LLM 把旧对话生成结构化摘要',
+    brief: '大多数 Agent 的核心策略（以 pi 为例）：用 LLM 把旧对话生成结构化摘要',
     status: '内置·自动',
     statusClass: 'bg-emerald-100 text-emerald-800',
     detail:
@@ -94,7 +94,7 @@ const methods: Method[] = [
     status: '需自行实现',
     statusClass: 'bg-amber-100 text-amber-800',
     detail:
-      '把对话转化为结构化数据（如"用户偏好：no-semicolons"、"确认方案：用 PostgreSQL"）。信息密度最高，但实现成本也最高。pi 的项目规则（CLAUDE.md）和 Extension 状态存储接近这条路径。',
+      '把对话转化为结构化数据（如"用户偏好：no-semicolons"、"确认方案：用 PostgreSQL"）。信息密度最高，但实现成本也最高。项目规则文件（CLAUDE.md）和 Extension 状态存储接近这条路径。',
     trigger: '不作为压缩策略自动触发。适合在任务结束时（持久记忆写入阶段）提取关键事实落盘。'
   }
 ];

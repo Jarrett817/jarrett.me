@@ -81,7 +81,8 @@
       <div class="rounded-lg border border-[#dbe3f0] bg-white p-2.5">
         <div class="mb-1.5 text-[0.62rem] font-bold text-[#3e66ae]">工具级：续读提示</div>
         <p class="text-gray-600">
-          每次截断后，pi 在 toolResult 末尾追加提示，告诉模型：被截了多少、全量在哪、怎么接着读。
+          每次截断后，Agent 会在 toolResult
+          末尾追加提示，告诉模型：被截了多少、全量在哪、怎么接着读。（以 pi 为例）
         </p>
         <div class="mt-2 space-y-1.5">
           <div

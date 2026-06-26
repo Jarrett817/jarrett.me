@@ -88,7 +88,10 @@
     <!-- 可调节部分 -->
     <div v-else class="mt-2 space-y-2">
       <p class="rounded-lg bg-slate-100 px-3 py-2 text-[0.78rem] leading-snug text-gray-700">
-        在发送前，Agent 可以对 messages 做两步处理——一步裁剪注入，一步格式转换。
+        在发送前，Agent 可以对 messages 做两步处理——一步裁剪注入，一步格式转换。<span
+          class="text-[0.62rem] text-gray-500"
+          >（以 pi 为例）</span
+        >
       </p>
       <div class="grid grid-cols-2 gap-2">
         <div class="rounded-lg border border-[#3e66ae]/30 bg-[#eef3fb] p-2">

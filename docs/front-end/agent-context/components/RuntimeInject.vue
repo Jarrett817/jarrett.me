@@ -52,7 +52,7 @@ getSteeringMessages: async () => {
   // 返回 [] 表示无干预；返回消息则注入 context
   return pending;
 }`,
-    source: '@earendil-works/pi-agent-core · AgentLoopConfig'
+    source: 'pi-agent-core · AgentLoopConfig'
   },
   {
     id: 'follow',
@@ -67,7 +67,7 @@ getFollowUpMessages: async () => {
   // 消息加入 context，agent 继续一轮
   return [followUpQueue.shift()!];
 }`,
-    source: '@earendil-works/pi-agent-core · AgentLoopConfig'
+    source: 'pi-agent-core · AgentLoopConfig'
   },
   {
     id: 'rules',
@@ -82,7 +82,7 @@ systemPrompt = [
   behaviorGuidelines,
   ...loadProjectRules(cwd), // 每轮重读
 ].join("\\n");`,
-    source: '@earendil-works/pi-coding-agent · system-prompt.ts'
+    source: 'pi-coding-agent · system-prompt.ts'
   }
 ];
 
