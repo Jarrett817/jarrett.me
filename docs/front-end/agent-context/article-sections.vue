@@ -93,8 +93,8 @@ const partBadgeClass = (part: PartId) =>
       <p :class="partBadgeClass('turn')">{{ parts.turn.num }} · {{ parts.turn.title }}</p>
       <h3>模型每轮收到什么</h3>
       <p class="fragment text-[0.85em] text-gray-600"
-        >每次调用 LLM，请求体由三部分组成：system
-        prompt（固定指令）、messages（对话记录）、以及发送前的裁剪转换。</p
+        >模型收到两样东西：system prompt（固定指令）和 messages（对话记录）。发送前 Agent
+        可以对内容做裁剪和格式转换。</p
       >
       <ContextPipeline class="fragment" />
     </section>
