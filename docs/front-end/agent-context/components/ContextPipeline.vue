@@ -24,29 +24,25 @@
 
     <!-- system -->
     <div v-if="active === 'system'" class="mt-2 space-y-2">
-      <p class="rounded-lg bg-slate-100 px-3 py-2 text-[0.78rem] leading-snug text-gray-700">
-        每次请求都会发送的固定指令，模型据此理解自己能做什么、该怎么做。
+      <p class="rounded-lg bg-slate-100 px-2.5 py-1.5 text-[0.72rem] leading-snug text-gray-700">
+        固定指令——模型据此理解自己能做什么、该遵守什么。
       </p>
-      <div class="space-y-1.5">
+      <div class="space-y-1">
         <div
           v-for="item in systemItems"
           :key="item.name"
-          class="flex items-start gap-2 rounded-md border border-gray-100 bg-white px-2.5 py-1.5"
+          class="flex items-baseline gap-1.5 rounded-md bg-white px-2 py-1"
         >
-          <code class="shrink-0 text-[0.65rem] font-semibold text-slate-700">{{ item.name }}</code>
-          <span class="text-[0.65rem] leading-snug text-gray-600">{{ item.desc }}</span>
+          <span class="shrink-0 text-[0.7rem] font-semibold text-slate-800">{{ item.name }}</span>
+          <span class="text-[0.65rem] text-gray-500">{{ item.desc }}</span>
         </div>
       </div>
-      <p class="text-[0.65rem] text-gray-500">
-        来源：Agent 配置 + 项目规则文件（每轮从磁盘读取，不受压缩影响）
-      </p>
     </div>
 
     <!-- messages -->
     <div v-else-if="active === 'messages'" class="mt-2 space-y-2">
-      <p class="rounded-lg bg-slate-100 px-3 py-2 text-[0.78rem] leading-snug text-gray-700">
-        模型看到的对话记录——用户发的每条消息（user prompt）、模型的回复、工具调用和返回都在这里。
-        用户当前的输入就是 messages 列表的最后一条。早期历史可能已被压缩为摘要，最近的保持原文。
+      <p class="rounded-lg bg-slate-100 px-2.5 py-1.5 text-[0.72rem] leading-snug text-gray-700">
+        对话记录——user 输入、assistant 回复、tool 调用和返回。用户当前输入 = 最后一条。
       </p>
       <div class="space-y-1 rounded-lg border border-[#dbe3f0] bg-white p-2">
         <div

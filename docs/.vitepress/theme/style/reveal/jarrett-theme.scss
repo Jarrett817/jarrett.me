@@ -174,10 +174,10 @@
 }
 
 /* 交互式组件：在 Reveal 的 36px base font 下，rem 会过大。
-   给组件容器设 16px base，让内部 rem/em 尺寸和文章模式一致。
+   给组件容器设 20px base，让内部 rem 尺寸适合 PPT 阅读。
    同时限制最大高度防止展开后溢出 slide。 */
 .reveal-presentation .reveal [data-reveal-interactive] {
-  font-size: 16px;
+  font-size: 20px;
   max-height: 65vh;
   overflow-y: auto;
 }
