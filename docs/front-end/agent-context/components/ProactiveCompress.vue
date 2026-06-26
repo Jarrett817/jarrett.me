@@ -19,7 +19,7 @@
         >
           {{ s.title }}
         </div>
-        <div class="mt-0.5 text-[0.62rem] text-gray-500">{{ s.tag }}</div>
+        <div class="mt-0.5 text-[0.72rem] text-gray-500">{{ s.tag }}</div>
       </button>
     </div>
 

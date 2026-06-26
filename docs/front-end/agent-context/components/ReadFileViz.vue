@@ -8,7 +8,7 @@
         仅在精读等场景由模型自选。
       </p>
 
-      <div class="grid grid-cols-3 gap-2 text-[0.65rem]">
+      <div class="grid grid-cols-3 gap-2 text-[0.8rem]">
         <div class="rounded-lg border border-gray-200 bg-gray-50 p-2">
           <div class="mb-1 font-bold text-gray-500">磁盘</div>
           <div class="font-mono text-gray-700">app.ts</div>
@@ -28,10 +28,10 @@
 
         <div class="rounded-lg border border-amber-200 bg-amber-50/60 p-2">
           <div class="mb-1 font-bold text-amber-800">进上下文 toolResult</div>
-          <div class="font-mono text-[0.62rem] leading-relaxed text-gray-700">
+          <div class="font-mono text-[0.72rem] leading-relaxed text-gray-700">
             {{ chunkSteps[chunkIdx].result }}
           </div>
-          <div v-if="chunkSteps[chunkIdx].hint" class="mt-1.5 text-[0.6rem] text-amber-700">
+          <div v-if="chunkSteps[chunkIdx].hint" class="mt-1.5 text-[0.7rem] text-amber-700">
             {{ chunkSteps[chunkIdx].hint }}
           </div>
         </div>
@@ -42,7 +42,7 @@
           v-for="(s, i) in chunkSteps"
           :key="i"
           type="button"
-          class="flex-1 rounded-md border px-1 py-1.5 text-[0.65rem] transition-all"
+          class="flex-1 rounded-md border px-1 py-1.5 text-[0.8rem] transition-all"
           :class="
             chunkIdx === i
               ? 'border-[#3e66ae] bg-[#eef3fb] font-semibold text-[#3e66ae]'
@@ -65,9 +65,9 @@
 
       <div class="grid grid-cols-2 gap-2">
         <div class="rounded-lg border border-gray-200 bg-gray-50 p-2">
-          <div class="mb-1 text-[0.65rem] font-bold text-gray-500">① grep 进上下文（pi 实现）</div>
+          <div class="mb-1 text-[0.8rem] font-bold text-gray-500">① grep 进上下文（pi 实现）</div>
           <CodeBlock :code="grepCall" language="json" />
-          <div class="mt-2 space-y-0.5 font-mono text-[0.62rem]">
+          <div class="mt-2 space-y-0.5 font-mono text-[0.72rem]">
             <button
               v-for="(hit, i) in grepHits"
               :key="i"
@@ -81,21 +81,21 @@
               {{ hit.formatted }}
             </button>
           </div>
-          <div class="mt-1.5 text-[0.58rem] text-gray-500">
+          <div class="mt-1.5 text-[0.68rem] text-gray-500">
             也可用 <code>context</code> 参数在 grep 里直接带上下文行，不必再 read
           </div>
         </div>
 
         <div class="rounded-lg border border-[#3e66ae]/40 bg-[#eef3fb] p-2">
-          <div class="mb-1 text-[0.65rem] font-bold text-[#3e66ae]"
+          <div class="mb-1 text-[0.8rem] font-bold text-[#3e66ae]"
             >② read 精读（模型自选，非 grep 内置）</div
           >
-          <p class="mb-1 text-[0.58rem] text-gray-500">
+          <p class="mb-1 text-[0.68rem] text-gray-500">
             行被截断到 {{ GREP_LINE_CHARS }} 字符、或需要更大范围时，模型再发起 read
           </p>
           <CodeBlock :code="grepReadCall" language="text" />
           <div
-            class="mt-2 rounded bg-white/80 p-2 font-mono text-[0.6rem] leading-relaxed text-gray-700"
+            class="mt-2 rounded bg-white/80 p-2 font-mono text-[0.7rem] leading-relaxed text-gray-700"
           >
             <div v-for="(ln, i) in grepReadPreview" :key="i">{{ ln }}</div>
           </div>
@@ -110,7 +110,7 @@
           v-for="t in tailTabs"
           :key="t.id"
           type="button"
-          class="rounded-md border px-2 py-1 text-[0.65rem] transition-all"
+          class="rounded-md border px-2 py-1 text-[0.8rem] transition-all"
           :class="
             tailTab === t.id
               ? 'border-[#3e66ae] bg-[#eef3fb] font-semibold text-[#3e66ae]'
@@ -130,7 +130,7 @@
           v-for="(s, i) in activeTailSteps"
           :key="s.id"
           type="button"
-          class="flex-1 rounded-md border px-1 py-1.5 text-[0.62rem] transition-all"
+          class="flex-1 rounded-md border px-1 py-1.5 text-[0.72rem] transition-all"
           :class="
             tailStepIdx === i
               ? 'border-[#3e66ae] bg-[#eef3fb] font-semibold text-[#3e66ae]'
@@ -142,30 +142,30 @@
         </button>
       </div>
 
-      <div class="rounded-lg border border-[#dbe3f0] bg-white p-2.5 text-[0.65rem]">
+      <div class="rounded-lg border border-[#dbe3f0] bg-white p-2.5 text-[0.8rem]">
         <div class="mb-1 font-bold text-gray-800">{{ activeTailStep.title }}</div>
         <p class="leading-relaxed text-gray-600">{{ activeTailStep.body }}</p>
 
         <div v-if="activeTailStep.call" class="mt-2">
-          <div class="mb-0.5 text-[0.58rem] font-semibold text-[#3e66ae]">调用</div>
+          <div class="mb-0.5 text-[0.68rem] font-semibold text-[#3e66ae]">调用</div>
           <CodeBlock :code="activeTailStep.call" language="text" />
         </div>
 
         <div v-if="activeTailStep.who" class="mt-2 flex flex-wrap gap-1">
           <span
-            class="rounded border border-gray-200 bg-gray-50 px-1.5 py-0.5 text-[0.58rem] text-gray-600"
+            class="rounded border border-gray-200 bg-gray-50 px-1.5 py-0.5 text-[0.68rem] text-gray-600"
             >{{ activeTailStep.who }}</span
           >
         </div>
 
         <div v-if="activeTailStep.thresholds?.length" class="mt-2 space-y-1">
-          <div class="text-[0.58rem] font-semibold text-gray-700">
+          <div class="text-[0.68rem] font-semibold text-gray-700">
             pi 判断条件（任一满足即截断；右侧为示意数值，非真实跑出来的）
           </div>
           <div
             v-for="(t, i) in activeTailStep.thresholds"
             :key="i"
-            class="flex flex-wrap items-center gap-1.5 rounded border px-2 py-1 text-[0.6rem]"
+            class="flex flex-wrap items-center gap-1.5 rounded border px-2 py-1 text-[0.7rem]"
             :class="t.hit ? 'border-amber-300 bg-amber-50/80' : 'border-gray-200 bg-gray-50'"
           >
             <code class="text-slate-700">{{ t.label }}</code>
@@ -174,7 +174,7 @@
             <span :class="t.hit ? 'font-semibold text-amber-800' : 'text-gray-600'"
               >示意 {{ t.example }}</span
             >
-            <span v-if="t.hit" class="rounded bg-amber-200 px-1 text-[0.55rem] text-amber-900"
+            <span v-if="t.hit" class="rounded bg-amber-200 px-1 text-[0.8rem] text-amber-900"
               >触发</span
             >
           </div>
@@ -182,7 +182,7 @@
 
         <div
           v-if="activeTailStep.output"
-          class="mt-2 rounded border border-amber-200 bg-amber-50/60 p-2 font-mono text-[0.6rem] leading-relaxed text-amber-900"
+          class="mt-2 rounded border border-amber-200 bg-amber-50/60 p-2 font-mono text-[0.7rem] leading-relaxed text-amber-900"
         >
           <div v-for="(ln, i) in activeTailStep.output" :key="i">{{ ln }}</div>
           <div v-if="activeTailStep.hint" class="mt-1.5 text-amber-700">{{
@@ -191,11 +191,11 @@
         </div>
 
         <div v-if="activeTailStep.actions?.length" class="mt-2 space-y-1">
-          <div class="text-[0.58rem] font-semibold text-emerald-700">模型可继续</div>
+          <div class="text-[0.68rem] font-semibold text-emerald-700">模型可继续</div>
           <div
             v-for="(a, i) in activeTailStep.actions"
             :key="i"
-            class="rounded bg-emerald-50/80 px-2 py-1 text-[0.6rem] text-gray-700"
+            class="rounded bg-emerald-50/80 px-2 py-1 text-[0.7rem] text-gray-700"
           >
             <code class="text-emerald-800">{{ a.call }}</code>
             <span class="text-gray-500"> — {{ a.why }}</span>

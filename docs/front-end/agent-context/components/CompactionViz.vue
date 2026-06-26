@@ -41,7 +41,7 @@
         v-for="t in tabs"
         :key="t.id"
         type="button"
-        class="rounded-md border px-2 py-1 text-[0.65rem] transition-all"
+        class="rounded-md border px-2 py-1 text-[0.8rem] transition-all"
         :class="
           tab === t.id
             ? 'border-[#3e66ae] bg-[#eef3fb] font-semibold text-[#3e66ae]'
@@ -61,7 +61,7 @@
       <div class="space-y-1.5 text-gray-700">
         <div class="flex items-start gap-2">
           <span
-            class="shrink-0 rounded bg-[#eef3fb] px-1.5 py-0.5 text-[0.6rem] font-semibold text-[#3e66ae]"
+            class="shrink-0 rounded bg-[#eef3fb] px-1.5 py-0.5 text-[0.7rem] font-semibold text-[#3e66ae]"
             >1</span
           >
           <span
@@ -71,7 +71,7 @@
         </div>
         <div class="flex items-start gap-2">
           <span
-            class="shrink-0 rounded bg-[#eef3fb] px-1.5 py-0.5 text-[0.6rem] font-semibold text-[#3e66ae]"
+            class="shrink-0 rounded bg-[#eef3fb] px-1.5 py-0.5 text-[0.7rem] font-semibold text-[#3e66ae]"
             >2</span
           >
           <span
@@ -80,14 +80,14 @@
         </div>
         <div class="flex items-start gap-2">
           <span
-            class="shrink-0 rounded bg-[#eef3fb] px-1.5 py-0.5 text-[0.6rem] font-semibold text-[#3e66ae]"
+            class="shrink-0 rounded bg-[#eef3fb] px-1.5 py-0.5 text-[0.7rem] font-semibold text-[#3e66ae]"
             >3</span
           >
           <span>切点之前的所有消息 → 用 LLM 生成结构化摘要</span>
         </div>
         <div class="flex items-start gap-2">
           <span
-            class="shrink-0 rounded bg-[#eef3fb] px-1.5 py-0.5 text-[0.6rem] font-semibold text-[#3e66ae]"
+            class="shrink-0 rounded bg-[#eef3fb] px-1.5 py-0.5 text-[0.7rem] font-semibold text-[#3e66ae]"
             >4</span
           >
           <span
@@ -101,11 +101,11 @@
     <!-- 第二次压缩（具体例子） -->
     <div
       v-else-if="tab === 'second'"
-      class="mt-2 rounded-lg border border-[#dbe3f0] bg-white p-2.5 text-[0.62rem]"
+      class="mt-2 rounded-lg border border-[#dbe3f0] bg-white p-2.5 text-[0.72rem]"
     >
       <div class="space-y-2 font-mono text-gray-700">
         <div>
-          <div class="mb-0.5 text-[0.55rem] font-sans font-semibold text-gray-500"
+          <div class="mb-0.5 text-[0.8rem] font-sans font-semibold text-gray-500"
             >第一轮压缩后的上下文：</div
           >
           <div class="rounded bg-slate-100 px-2 py-1">
@@ -116,7 +116,7 @@
         </div>
         <div class="text-center text-gray-400 font-sans">↓ 继续对话，又满了</div>
         <div>
-          <div class="mb-0.5 text-[0.55rem] font-sans font-semibold text-gray-500"
+          <div class="mb-0.5 text-[0.8rem] font-sans font-semibold text-gray-500"
             >第二轮压缩前：</div
           >
           <div class="rounded bg-slate-100 px-2 py-1">
@@ -132,7 +132,7 @@
           </div>
         </div>
         <div>
-          <div class="mb-0.5 text-[0.55rem] font-sans font-semibold text-gray-500"
+          <div class="mb-0.5 text-[0.8rem] font-sans font-semibold text-gray-500"
             >送给 LLM 合并：</div
           >
           <div class="rounded bg-amber-50 border border-amber-200 px-2 py-1">
@@ -141,7 +141,7 @@
           </div>
         </div>
         <div>
-          <div class="mb-0.5 text-[0.55rem] font-sans font-semibold text-gray-500"
+          <div class="mb-0.5 text-[0.8rem] font-sans font-semibold text-gray-500"
             >第二轮压缩后：</div
           >
           <div class="rounded bg-emerald-50 border border-emerald-200 px-2 py-1">
@@ -153,7 +153,7 @@
     </div>
 
     <!-- 第三次及以后 -->
-    <div v-else class="mt-2 rounded-lg border border-[#dbe3f0] bg-white p-2.5 text-[0.62rem]">
+    <div v-else class="mt-2 rounded-lg border border-[#dbe3f0] bg-white p-2.5 text-[0.72rem]">
       <p class="font-sans text-gray-700">
         第三次和第二次<strong>完全一样</strong>——永远是 LLM(旧摘要 + 放不下的消息) → 新摘要：
       </p>
@@ -166,7 +166,7 @@
         <span class="text-[#3e66ae] font-semibold">[摘要C]</span>
         <span class="text-emerald-700">[消息101]...[消息130]</span>
       </div>
-      <div class="mt-2 space-y-1 font-sans text-[0.58rem] text-gray-600">
+      <div class="mt-2 space-y-1 font-sans text-[0.68rem] text-gray-600">
         <div>• 原文始终保留最近 ~{{ keep }}k token（可调）</div>
         <div>• 每次压缩只处理"摘要 + 新增量"，不重读全部历史</div>
         <div>• 代价：压缩次数越多，最早期的细节越模糊</div>

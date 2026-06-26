@@ -15,7 +15,7 @@
       />
       <div class="min-w-0 flex-1">
         <div class="text-[0.75rem] font-semibold">{{ l.label }}</div>
-        <div class="text-[0.65rem] text-gray-500">{{ l.hint }}</div>
+        <div class="text-[0.8rem] text-gray-500">{{ l.hint }}</div>
       </div>
     </button>
     <div v-if="currentLayer" class="mt-2 rounded-lg border border-[#dbe3f0] bg-white px-3 py-2">

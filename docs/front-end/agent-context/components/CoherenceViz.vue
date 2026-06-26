@@ -5,7 +5,7 @@
         v-for="t in tabs"
         :key="t.id"
         type="button"
-        class="rounded-md border px-2 py-1 text-[0.65rem] transition-all"
+        class="rounded-md border px-2 py-1 text-[0.75rem] transition-all"
         :class="
           active === t.id
             ? 'border-[#3e66ae] bg-[#eef3fb] font-semibold text-[#3e66ae]'
@@ -18,7 +18,7 @@
     </div>
 
     <!-- ① -->
-    <div v-if="active === 'pairing'" class="mt-2 space-y-1.5 text-[0.65rem]">
+    <div v-if="active === 'pairing'" class="mt-2 space-y-1.5 text-[0.75rem]">
       <div class="rounded-lg border border-[#dbe3f0] bg-white px-2.5 py-2 text-gray-700">
         <strong>不存在"只留调用丢结果"的情况。</strong>
         压缩切点只能落在 user/assistant 消息上，tool_use + tool_result
@@ -32,12 +32,12 @@
     </div>
 
     <!-- ② -->
-    <div v-else-if="active === 'boundary'" class="mt-2 space-y-1.5 text-[0.65rem]">
+    <div v-else-if="active === 'boundary'" class="mt-2 space-y-1.5 text-[0.75rem]">
       <div class="rounded-lg border border-[#dbe3f0] bg-white px-2.5 py-2 text-gray-700">
         <strong>按行裁，不按词裁。</strong>丢的是整行/整段，不会出现半个字被劈开。
       </div>
       <div class="overflow-x-auto rounded-lg border border-slate-200">
-        <table class="w-full text-left text-[0.6rem]">
+        <table class="w-full text-left text-[0.7rem]">
           <thead class="bg-slate-100 text-gray-600">
             <tr
               ><th class="px-2 py-1">场景</th><th class="px-2 py-1">半行？</th
@@ -58,7 +58,7 @@
     </div>
 
     <!-- ③ -->
-    <div v-else class="mt-2 space-y-1.5 text-[0.65rem]">
+    <div v-else class="mt-2 space-y-1.5 text-[0.75rem]">
       <div class="rounded-lg border border-[#dbe3f0] bg-white px-2.5 py-2 text-gray-700">
         <strong>工具级：</strong>截断后 toolResult 末尾附带续读提示（行号、文件路径），模型按需再
         read。

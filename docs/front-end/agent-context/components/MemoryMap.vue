@@ -35,7 +35,7 @@
         </div>
         <div class="min-w-0 flex-1">
           <div class="text-[0.72rem] font-semibold text-gray-800">{{ m.label }}</div>
-          <div class="mt-0.5 text-[0.62rem] text-gray-500">{{ m.brief }}</div>
+          <div class="mt-0.5 text-[0.72rem] text-gray-500">{{ m.brief }}</div>
         </div>
       </button>
     </div>
@@ -48,11 +48,11 @@
       <p class="leading-snug text-gray-700">{{ current.detail }}</p>
       <div
         v-if="current.example"
-        class="mt-1.5 rounded bg-slate-100 px-2 py-1.5 text-[0.62rem] text-gray-600 font-mono"
+        class="mt-1.5 rounded bg-slate-100 px-2 py-1.5 text-[0.72rem] text-gray-600 font-mono"
       >
         {{ current.example }}
       </div>
-      <div class="mt-1.5 flex flex-wrap gap-1.5 text-[0.6rem]">
+      <div class="mt-1.5 flex flex-wrap gap-1.5 text-[0.7rem]">
         <span
           v-for="agent in current.agents"
           :key="agent"

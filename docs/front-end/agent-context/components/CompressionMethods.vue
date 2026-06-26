@@ -10,7 +10,7 @@
         @click="active = m.id"
       >
         <span
-          class="mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[0.58rem] font-bold"
+          class="mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[0.68rem] font-bold"
           :class="m.statusClass"
           >{{ m.status }}</span
         >
@@ -21,7 +21,7 @@
           >
             {{ m.title }}
           </div>
-          <div class="mt-0.5 text-[0.62rem] text-gray-500">{{ m.brief }}</div>
+          <div class="mt-0.5 text-[0.72rem] text-gray-500">{{ m.brief }}</div>
         </div>
       </button>
     </div>
@@ -32,7 +32,7 @@
     >
       <p class="leading-snug text-gray-700">{{ current.detail }}</p>
       <div
-        class="mt-2 rounded border border-gray-200 bg-gray-50 px-2 py-1.5 text-[0.62rem] text-gray-600"
+        class="mt-2 rounded border border-gray-200 bg-gray-50 px-2 py-1.5 text-[0.72rem] text-gray-600"
       >
         <strong>何时触发：</strong>{{ current.trigger }}
       </div>

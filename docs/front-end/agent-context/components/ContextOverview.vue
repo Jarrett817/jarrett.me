@@ -2,12 +2,12 @@
   <div class="mt-4 text-left">
     <div v-if="part === 'limits'" class="flex items-center gap-3">
       <div class="flex-1 rounded-lg border-2 border-[#3e66ae] bg-[#eef3fb] px-3 py-2 text-center">
-        <div class="text-[0.65rem] text-gray-500">LLM 窗口</div>
+        <div class="text-[0.8rem] text-gray-500">LLM 窗口</div>
         <div class="text-sm font-bold text-[#3e66ae]">有限</div>
       </div>
       <DeckIcon :icon="Close" :size="18" color-class="text-gray-400" />
       <div class="flex-[2] rounded-lg border border-dashed border-gray-300 px-3 py-2 text-center">
-        <div class="text-[0.65rem] text-gray-500">Agent 任务</div>
+        <div class="text-[0.8rem] text-gray-500">Agent 任务</div>
         <div class="text-sm font-bold text-gray-700">无限长</div>
       </div>
     </div>

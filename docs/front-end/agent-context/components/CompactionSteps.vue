@@ -13,7 +13,7 @@
             :size="20"
             :color-class="active === i ? 'text-[#3e66ae]' : 'text-gray-400'"
           />
-          <span class="mt-1 text-[0.6rem] font-medium text-gray-700">{{ s.label }}</span>
+          <span class="mt-1 text-[0.7rem] font-medium text-gray-700">{{ s.label }}</span>
         </button>
         <DeckIcon
           v-if="i < steps.length - 1"

@@ -226,7 +226,7 @@ const partBadgeClass = (part: PartId) =>
           >
         </div>
       </div>
-      <p class="fragment mt-2 text-[0.65em] text-gray-500">
+      <p class="fragment mt-2 text-[0.8em] text-gray-500">
         长期记忆可细分：情节记忆（具体经历）、语义记忆（提炼规律）、程序记忆（操作流程）。
       </p>
     </section>

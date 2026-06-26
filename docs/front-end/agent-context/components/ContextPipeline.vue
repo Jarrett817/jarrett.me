@@ -18,7 +18,7 @@
         >
           {{ block.label }}
         </div>
-        <div class="mt-0.5 text-[0.62rem] text-gray-500">{{ block.size }}</div>
+        <div class="mt-0.5 text-[0.72rem] text-gray-500">{{ block.size }}</div>
       </button>
     </div>
 
@@ -34,7 +34,7 @@
           class="flex items-baseline gap-1.5 rounded-md bg-white px-2 py-1"
         >
           <span class="shrink-0 text-[0.7rem] font-semibold text-slate-800">{{ item.name }}</span>
-          <span class="text-[0.65rem] text-gray-500">{{ item.desc }}</span>
+          <span class="text-[0.8rem] text-gray-500">{{ item.desc }}</span>
         </div>
       </div>
     </div>
@@ -57,23 +57,23 @@
       </div>
       <div class="grid grid-cols-2 gap-2">
         <div class="rounded-lg border border-emerald-200 bg-emerald-50/50 p-2">
-          <div class="mb-1 text-[0.62rem] font-bold text-emerald-700">进入 messages</div>
+          <div class="mb-1 text-[0.72rem] font-bold text-emerald-700">进入 messages</div>
           <div class="flex flex-wrap gap-1">
             <span
               v-for="t in included"
               :key="t"
-              class="rounded-md bg-white px-1.5 py-0.5 text-[0.62rem] text-gray-700 shadow-sm"
+              class="rounded-md bg-white px-1.5 py-0.5 text-[0.72rem] text-gray-700 shadow-sm"
               >{{ t }}</span
             >
           </div>
         </div>
         <div class="rounded-lg border border-gray-200 bg-gray-50 p-2">
-          <div class="mb-1 text-[0.62rem] font-bold text-gray-500">不进入 messages</div>
+          <div class="mb-1 text-[0.72rem] font-bold text-gray-500">不进入 messages</div>
           <div class="flex flex-wrap gap-1">
             <span
               v-for="t in excluded"
               :key="t"
-              class="rounded-md bg-white px-1.5 py-0.5 text-[0.62rem] text-gray-500 shadow-sm"
+              class="rounded-md bg-white px-1.5 py-0.5 text-[0.72rem] text-gray-500 shadow-sm"
               >{{ t }}</span
             >
           </div>
@@ -85,20 +85,20 @@
     <div v-else class="mt-2 space-y-2">
       <p class="rounded-lg bg-slate-100 px-3 py-2 text-[0.78rem] leading-snug text-gray-700">
         在发送前，Agent 可以对 messages 做两步处理——一步裁剪注入，一步格式转换。<span
-          class="text-[0.62rem] text-gray-500"
+          class="text-[0.72rem] text-gray-500"
           >（以 pi 为例）</span
         >
       </p>
       <div class="grid grid-cols-2 gap-2">
         <div class="rounded-lg border border-[#3e66ae]/30 bg-[#eef3fb] p-2">
-          <code class="text-[0.65rem] font-bold text-[#3e66ae]">transformContext</code>
-          <p class="mt-1 text-[0.62rem] text-gray-600">
+          <code class="text-[0.8rem] font-bold text-[#3e66ae]">transformContext</code>
+          <p class="mt-1 text-[0.72rem] text-gray-600">
             可选。语义层面决定保留什么：删旧 tool 输出、注入 RAG 片段、去重。
           </p>
         </div>
         <div class="rounded-lg border border-gray-200 bg-white p-2">
-          <code class="text-[0.65rem] font-bold text-slate-700">convertToLlm</code>
-          <p class="mt-1 text-[0.62rem] text-gray-600">
+          <code class="text-[0.8rem] font-bold text-slate-700">convertToLlm</code>
+          <p class="mt-1 text-[0.72rem] text-gray-600">
             必需。格式转换：内部消息类型映射为 API 协议格式，过滤仅 UI 用的消息。
           </p>
         </div>
